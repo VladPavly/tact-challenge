@@ -42,7 +42,14 @@ contract Task2 with Deployable {
       value: 0,
       mode: SendRemainingValue + SendIgnoreErrors, 
       bounce: false, 
-      body: beginCell().storeAddress(sender()).storeRef(msg).endCell()
+      body: beginCell()
+        .storeAddress(sender())
+        .storeRef(
+          beginCell()
+          .storeSlice(msg)
+          .endCell()
+        )
+        .endCell()
     });
   }
 }
