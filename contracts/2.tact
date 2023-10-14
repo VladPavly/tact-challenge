@@ -26,8 +26,23 @@ contract Task2 with Deployable {
   }
   
   receive(msg: Refund) {
+    require(sender() != self.admin, "Insufficient permissions");
+
+    send(SendParameters{
+      to: msg.sender, 
+      value: 0,
+      mode: SendRemainingValue + SendIgnoreErrors, 
+      bounce: false
+    });
   }
 
   receive(msg: Slice) {
+    send(SendParameters{
+      to: self.owner, 
+      value: 0,
+      mode: SendRemainingValue + SendIgnoreErrors, 
+      bounce: false, 
+      body: beginCell().storeAddress(sender()).storeRef(msg).endCell()
+    });
   }
 }

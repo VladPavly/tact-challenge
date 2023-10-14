@@ -36,4 +36,3 @@ contract Task1 with Deployable {
       return self.counter;
     }
 }
-
