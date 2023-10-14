@@ -87,9 +87,15 @@ contract Task3 with Deployable {
     let jetton_address: Address = self.jettonAddressA;
     let amount_of_token: Int = self.swap_estimate(context().sender, msg.amount);
 
+    // let mode: Int = 2;
+    // let value: Int = 100000000;
+
     if (context().sender == self.jettonAddressA) {
-      if (self.bAmount < amount_of_token) {
+      if (self.bAmount <= amount_of_token) {
         amount_of_token = msg.amount;
+
+        // mode = 64;
+        // value = 0;
       } else {
         self.aAmount = self.aAmount + msg.amount;
         self.bAmount = self.bAmount - amount_of_token;
@@ -97,9 +103,12 @@ contract Task3 with Deployable {
         jetton_address = self.jettonAddressB;
       }
     } else if (context().sender == self.jettonAddressB) {
-      if (self.aAmount < amount_of_token) {
+      if (self.aAmount <= amount_of_token) {
         amount_of_token = msg.amount;
         jetton_address = self.jettonAddressB;
+
+        // mode = 64;
+        // value = 0;
       } else {
         self.bAmount = self.bAmount + msg.amount;
         self.aAmount = self.aAmount - amount_of_token;
