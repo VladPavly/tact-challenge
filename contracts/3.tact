@@ -102,20 +102,18 @@ contract Task3 with Deployable {
       let jetton_address: Address = self.jettonAddressA;
     }
 
-    let body = TokenTransfer{
-      queryId: 0,
-      amount: amount_of_token,
-      destination: msg.from,
-      forwardTonAmount: 50000000,
-      forwardPayload: emptyCell()
-    }
-
     send(SendParameters{
       to: jetton_address, 
       value: 0,
       mode: SendRemainingValue + SendIgnoreErrors, 
       bounce: false, 
-      body: body
+      body: TokenTransfer{
+        queryId: 0,
+        amount: amount_of_token,
+        destination: msg.from,
+        forwardTonAmount: 50000000,
+        forwardPayload: emptyCell()
+      }
     });
   }
   
