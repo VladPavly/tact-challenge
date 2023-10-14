@@ -85,21 +85,21 @@ contract Task3 with Deployable {
       "Invalid jetton"
     );
 
-    let amount_of_token = swap_estimate(context().sender, msg.amount);
+    let amount_of_token: Int as coins = swap_estimate(context().sender, msg.amount);
     if (context().sender == self.jettonAddressA) {
       require(self.bAmount >= amount_of_token, "Insufficient balance");
 
       self.aAmount = self.aAmount - msg.amount;
       self.bAmount = self.bAmount - amount_of_token;
 
-      let jetton_address = self.jettonAddressB;
+      let jetton_address: Address = self.jettonAddressB;
     } else if (context().sender == self.jettonAddressB) {
       require(self.aAmount >= amount_of_token, "Insufficient balance");
 
       self.bAmount = self.bAmount - msg.amount;
       self.aAmount = self.aAmount - amount_of_token;
 
-      let jetton_address = self.jettonAddressA;
+      let jetton_address: Address = self.jettonAddressA;
     }
 
     let body = TokenTransfer{
@@ -119,7 +119,7 @@ contract Task3 with Deployable {
     });
   }
   
-  fun swap_estimate(jetton: Address, amount: Int) {
+  fun swap_estimate(jetton: Address, amount: Int as coins) {
     if (jetton == self.jettonAddressA) {
       return (self.aAmount * self.decimal / self.bAmount) * amount / self.decimal;
     } else {
