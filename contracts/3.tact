@@ -7,12 +7,18 @@ import "@stdlib/deploy";
   Therefore, the smart contract needs to keep track of how much jettons it has.
   
   Price for the jetton A in swap B->A should be calculated by formula "amountOfJettonAOnContract * decimal / amountOfJettonBOnContract".
+  Token prices must be decimalized for accuracy, so it is the prices that must be adjusted to decimal 1e9.
   Decimals are only needed for price accuracy. It should be set as 1e9.
   So, if smart contract has 10 of jetton A and 2 of jetton B, then after sending 1 jetton B you should receive 5 of jettons A.
 
-  If smart contract pool doesn't have enough jettons to trade
-  (for example someone sends 99999 jettons of B, but dex pool only has 10 of jettons A),
-  then sent incoming jettons (B, in our example) back to the sender.
+  Example formula for amountOfBJettonToSend in B->A swap will be
+  (amountOfJettonAOnContract * decimal / amountOfJettonBOnContract) * amountOfTokenBToSwap / decimal
+
+  If smart contract pool doesn't have enough jettons to trade,
+  then it should send incoming jettons back to the user. For a clearer explanation,
+  let's look at the example we described above (smart contract has 10 of jetton A and 2 of jetton B).
+  If user will send 3 jettons B, smart contract should reject the message (because contract does not have 3 * 5 = 15 jettons A)
+  and send 3 jettons B back to the user.
 
   If smart contract receives a different jetton (neither A nor B) then throw an error.
 
@@ -26,14 +32,14 @@ import "@stdlib/deploy";
   To be exact: any jettons (A or B) received from the admin are "added". Admin can't swap.
 */
 
-message(0x7362d09c) JettonNotification {
+message(0x7362d09c) TokenNotification {
     queryId: Int as uint64;
     amount: Int as coins;
     from: Address;
     forwardPayload: Slice as remaining;
 }
 
-message(0xf8a7ea5) JettonTransfer {
+message(0xf8a7ea5) TokenTransfer {
     queryId: Int as uint64;
     amount: Int as coins;
     destination: Address;
@@ -60,12 +66,80 @@ contract Task3 with Deployable {
     self.decimal = 1000000000;
   }
 
-  receive(msg: JettonNotification) {
-  } 
+  receive(msg: TokenNotification) {
+    if (msg.from == self.owner) {
+      if (context().sender == self.jettonAddressA) {
+        self.aAmount += msg.amount;
+      } else if (context().sender == self.jettonAddressB) {
+        self.bAmount += msg.amount;
+      } else {
+        require(false, "Invalid jetton");
+      }
+
+      return 0;
+    }
+
+    require(
+      context().sender == self.jettonAddressA ||
+      context().sender == self.jettonAddressB, 
+      "Invalid jetton"
+    );
+
+    let amount_of_token = swap_estimate(context().sender, msg.amount);
+    if (context().sender == self.jettonAddressA) {
+      require(self.bAmount >= amount_of_token, "Insufficient balance");
+
+      self.aAmount += msg.amount;
+      self.bAmount -= amount_of_token;
+
+      let jetton_address = self.jettonAddressB;
+    } else if (context().sender == self.jettonAddressB) {
+      require(self.aAmount >= amount_of_token, "Insufficient balance");
+
+      self.bAmount += msg.amount;
+      self.aAmount -= amount_of_token;
+
+      let jetton_address = self.jettonAddressA;
+    }
+
+    let body = TokenTransfer{
+      queryId: 0,
+      amount: amount_of_token,
+      destination: msg.from,
+      forwardTonAmount: 50000000,
+      forwardPayload: emptyCell()
+    }
+
+    send(SendParameters{
+      to: jetton_address, 
+      value: 0,
+      mode: SendRemainingValue + SendIgnoreErrors, 
+      bounce: false, 
+      body: body
+    });
+  }
   
+  fun swap_estimate(jetton: Address, amount: Int) {
+    if (jetton == self.jettonAddressA) {
+      return (self.aAmount * self.decimal / self.bAmount) * amount / self.decimal;
+    } else {
+      return (self.bAmount * self.decimal / self.aAmount) * amount / self.decimal;
+    }
+  }
+
   get fun price(jetton: Address): Int { 
+    if (jetton == self.jettonAddressB) {
+      return self.aAmount * self.decimal / self.bAmount;
+    } else {
+      return self.bAmount * self.decimal / self.aAmount;
+    }
   }
   
   get fun balance(jetton: Address): Int { 
+    if (jetton == self.jettonAddressA) {
+      return self.aAmount;
+    } else {
+      return self.bAmount;
+    }
   }
 }

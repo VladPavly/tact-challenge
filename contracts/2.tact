@@ -43,12 +43,12 @@ contract Task2 with Deployable {
       mode: SendRemainingValue + SendIgnoreErrors, 
       bounce: false, 
       body: beginCell()
-            .storeAddress(sender())
-            .storeRef(
-              beginCell()
-              .storeSlice(msg)
-              .endCell()
-            )
+              .storeAddress(sender())
+              .storeRef(
+                beginCell()
+                  .storeSlice(msg)
+                .endCell()
+              )
             .endCell()
     });
   }
