@@ -69,9 +69,9 @@ contract Task3 with Deployable {
   receive(msg: TokenNotification) {
     if (msg.from == self.owner) {
       if (context().sender == self.jettonAddressA) {
-        self.aAmount += msg.amount;
+        self.aAmount = self.aAmount + msg.amount;
       } else if (context().sender == self.jettonAddressB) {
-        self.bAmount += msg.amount;
+        self.bAmount = self.bAmount + msg.amount;
       } else {
         require(false, "Invalid jetton");
       }
@@ -89,15 +89,15 @@ contract Task3 with Deployable {
     if (context().sender == self.jettonAddressA) {
       require(self.bAmount >= amount_of_token, "Insufficient balance");
 
-      self.aAmount += msg.amount;
-      self.bAmount -= amount_of_token;
+      self.aAmount = self.aAmount - msg.amount;
+      self.bAmount = self.bAmount - amount_of_token;
 
       let jetton_address = self.jettonAddressB;
     } else if (context().sender == self.jettonAddressB) {
       require(self.aAmount >= amount_of_token, "Insufficient balance");
 
-      self.bAmount += msg.amount;
-      self.aAmount -= amount_of_token;
+      self.bAmount = self.bAmount - msg.amount;
+      self.aAmount = self.aAmount - amount_of_token;
 
       let jetton_address = self.jettonAddressA;
     }
