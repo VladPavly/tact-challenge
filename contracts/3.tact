@@ -85,7 +85,7 @@ contract Task3 with Deployable {
       "Invalid jetton"
     );
 
-    let amount_of_token: Int as coins = swap_estimate(context().sender, msg.amount);
+    let amount_of_token: Int = swap_estimate(context().sender, msg.amount);
     if (context().sender == self.jettonAddressA) {
       require(self.bAmount >= amount_of_token, "Insufficient balance");
 
@@ -119,7 +119,7 @@ contract Task3 with Deployable {
     });
   }
   
-  fun swap_estimate(jetton: Address, amount: Int as coins) {
+  fun swap_estimate(jetton: Address, amount: Int) {
     if (jetton == self.jettonAddressA) {
       return (self.aAmount * self.decimal / self.bAmount) * amount / self.decimal;
     } else {
