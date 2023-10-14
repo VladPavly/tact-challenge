@@ -80,11 +80,11 @@ contract Task3 with Deployable {
     }
 
     require(
-      context().sender == self.jettonAddressA ||
-      context().sender == self.jettonAddressB, 
+      context().sender == self.jettonAddressA || context().sender == self.jettonAddressB, 
       "Invalid jetton"
     );
 
+    let jetton_address: Address;
     let amount_of_token: Int = self.swap_estimate(context().sender, msg.amount);
     if (context().sender == self.jettonAddressA) {
       require(self.bAmount >= amount_of_token, "Insufficient balance");
@@ -92,14 +92,14 @@ contract Task3 with Deployable {
       self.aAmount = self.aAmount - msg.amount;
       self.bAmount = self.bAmount - amount_of_token;
 
-      let jetton_address: Address = self.jettonAddressB;
+      jetton_address: Address = self.jettonAddressB;
     } else if (context().sender == self.jettonAddressB) {
       require(self.aAmount >= amount_of_token, "Insufficient balance");
 
       self.bAmount = self.bAmount - msg.amount;
       self.aAmount = self.aAmount - amount_of_token;
 
-      let jetton_address: Address = self.jettonAddressA;
+      jetton_address = self.jettonAddressA;
     }
 
     send(SendParameters{
