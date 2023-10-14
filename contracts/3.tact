@@ -119,7 +119,7 @@ contract Task3 with Deployable {
       to: jetton_address, 
       value: value,
       mode: mode, 
-      bounce: false, п
+      bounce: false,
       body: TokenTransfer{
         queryId: 0,
         amount: amount_of_token,
