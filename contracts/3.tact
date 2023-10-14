@@ -66,6 +66,14 @@ contract Task3 with Deployable {
     self.decimal = 1000000000;
   }
 
+  fun swap_estimate(jetton: Address, amount: Int): Int {
+    if (jetton == self.jettonAddressA) {
+      return (self.aAmount * self.decimal / self.bAmount) * amount / self.decimal;
+    } else {
+      return (self.bAmount * self.decimal / self.aAmount) * amount / self.decimal;
+    }
+  }
+
   receive(msg: TokenNotification) {
     if (msg.from == self.owner) {
       if (context().sender == self.jettonAddressA) {
@@ -115,14 +123,6 @@ contract Task3 with Deployable {
         forwardPayload: emptyCell()
       }
     });
-  }
-  
-  fun swap_estimate(jetton: Address, amount: Int) {
-    if (jetton == self.jettonAddressA) {
-      return (self.aAmount * self.decimal / self.bAmount) * amount / self.decimal;
-    } else {
-      return (self.bAmount * self.decimal / self.aAmount) * amount / self.decimal;
-    }
   }
 
   get fun price(jetton: Address): Int { 
