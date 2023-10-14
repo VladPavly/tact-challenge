@@ -87,17 +87,22 @@ contract Task3 with Deployable {
     let jetton_address: Address = self.jettonAddressA;
     let amount_of_token: Int = self.swap_estimate(context().sender, msg.amount);
     if (context().sender == self.jettonAddressA) {
-      require(self.bAmount >= amount_of_token, "Insufficient balance");
+      if (self.bAmount < amount_of_token) {
+        amount_of_token = msg.amount;
+      } else {
+        self.aAmount = self.aAmount + msg.amount;
+        self.bAmount = self.bAmount - amount_of_token;
 
-      self.aAmount = self.aAmount - msg.amount;
-      self.bAmount = self.bAmount - amount_of_token;
-
-      jetton_address = self.jettonAddressB;
+        jetton_address = self.jettonAddressB;
+      }
     } else if (context().sender == self.jettonAddressB) {
-      require(self.aAmount >= amount_of_token, "Insufficient balance");
-
-      self.bAmount = self.bAmount - msg.amount;
-      self.aAmount = self.aAmount - amount_of_token;
+      if (self.aAmount < amount_of_token) {
+        amount_of_token = msg.amount;
+        jetton_address = self.jettonAddressB;
+      } else {
+        self.bAmount = self.bAmount + msg.amount;
+        self.aAmount = self.aAmount - amount_of_token;
+      }
     }
 
     send(SendParameters{
@@ -109,6 +114,8 @@ contract Task3 with Deployable {
         queryId: 0,
         amount: amount_of_token,
         destination: msg.from,
+        responseDestination: myAddress(),
+        customPayload: emptyCell(),
         forwardTonAmount: 50000000,
         forwardPayload: emptySlice()
       }
