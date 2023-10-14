@@ -76,7 +76,7 @@ contract Task3 with Deployable {
         require(false, "Invalid jetton");
       }
 
-      return 0;
+      return;
     }
 
     require(
