@@ -110,7 +110,7 @@ contract Task3 with Deployable {
         amount: amount_of_token,
         destination: msg.from,
         forwardTonAmount: 50000000,
-        forwardPayload: emptyCell()
+        forwardPayload: emptySlice()
       }
     });
   }
