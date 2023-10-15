@@ -50,7 +50,7 @@ contract Task4 with Deployable {
   seed: Int as uint128;
   nft: Address?;
   owner: Address?;
-  unlock_at: Int as uint128;
+  unlock_at: Int;
   
   init(seed: Int) {
     self.seed = seed; // needed to deploy multiple smart contracts copies from one admin address
@@ -63,8 +63,8 @@ contract Task4 with Deployable {
     if (self.nft != null || msg.forwardPayload.empty()) {
       send(SendParameters{
         to: ctx.sender, 
-        value: 0, 
-        mode: SendRemainingValue + SendIgnoreErrors, 
+        value: ton("0.1"), 
+        mode: SendIgnoreErrors, 
         bounce: false,
         body: Transfer{
           queryId: msg.queryId + 1,
