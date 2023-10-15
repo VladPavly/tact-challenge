@@ -91,7 +91,7 @@ contract Task3 with Deployable {
     // let value: Int = 100000000;
 
     if (context().sender == self.jettonAddressA) {
-      if (self.bAmount <= amount_of_token) {
+      if (self.bAmount < amount_of_token) {
         amount_of_token = msg.amount;
 
         // mode = 64;
@@ -103,7 +103,7 @@ contract Task3 with Deployable {
         jetton_address = self.jettonAddressB;
       }
     } else if (context().sender == self.jettonAddressB) {
-      if (self.aAmount <= amount_of_token) {
+      if (self.aAmount < amount_of_token) {
         amount_of_token = msg.amount;
         jetton_address = self.jettonAddressB;
 
