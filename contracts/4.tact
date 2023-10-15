@@ -66,7 +66,7 @@ contract Task4 with Deployable {
         mode: SendRemainingValue, 
         bounce: false,
         body: Transfer{
-          queryId: 0,
+          queryId: msg.queryId + 1,
           newOwner: msg.prevOwner,
           responseDestination: myAddress(),
           customPayload: emptyCell(),
@@ -106,7 +106,7 @@ contract Task4 with Deployable {
       mode: SendRemainingBalance, 
       bounce: false,
       body: Transfer{
-        queryId: 0,
+        queryId: msg.queryId + 1,
         newOwner: self.owner!!,
         responseDestination: ctx.sender,
         customPayload: emptyCell(),
