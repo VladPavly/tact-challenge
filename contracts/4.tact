@@ -50,11 +50,10 @@ contract Task4 with Deployable {
   seed: Int as uint128;
   nft: Address?;
   owner: Address?;
-  unlock_at: Int as uint32;
+  unlock_at: Int? as uint32;
   
   init(seed: Int) {
     self.seed = seed; // needed to deploy multiple smart contracts copies from one admin address
-    self.unlock_at = 0;
   }
 
   receive(msg: OwnershipAssigned) {
@@ -89,27 +88,27 @@ contract Task4 with Deployable {
 
     require(ctx.sender == self.owner, "Invalid sender");
 
-    if (now() <= self.unlock_at) {
+    if (now() <= self.unlock_at!!) {
       send(SendParameters{
         to: ctx.sender, 
         value: 0, 
         mode: SendRemainingValue, 
         bounce: false,
-        body: "NFT is still locked".asСomment()
+        body: "NFT is still locked".asComment()
       });
 
       return;
     }
 
     send(SendParameters{
-      to: self.nft, 
+      to: self.nft!!, 
       value: 0, 
       mode: SendRemainingBalance, 
       bounce: false,
       body: Transfer{
         queryId: 0,
-        newOwner: self.owner,
-        responseDestination: myAddress(),
+        newOwner: self.owner!!,
+        responseDestination: ctx.sender,
         customPayload: emptyCell(),
         forwardAmount: 50000000,
         forwardPayload: emptySlice()
@@ -118,11 +117,11 @@ contract Task4 with Deployable {
   }
 
   get fun time(): Int {
-    if (self.unlock_at <= now()) {
+    if (self.unlock_at == null || self.unlock_at!! <= now()) {
       return 0;
     }
 
-    return self.unlock_at - now();
+    return self.unlock_at!! - now();
   }
 
   get fun nft(): Address? {
