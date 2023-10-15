@@ -70,7 +70,7 @@ contract Task4 with Deployable {
           newOwner: msg.prevOwner,
           responseDestination: myAddress(),
           customPayload: emptyCell(),
-          forwardAmount: 50000000,
+          forwardAmount: 0,
           forwardPayload: emptySlice()
         }.toCell()
       });
@@ -103,7 +103,7 @@ contract Task4 with Deployable {
         newOwner: self.owner!!,
         responseDestination: ctx.sender,
         customPayload: emptyCell(),
-        forwardAmount: 50000000,
+        forwardAmount: 0,
         forwardPayload: emptySlice()
       }.toCell()
     });
