@@ -61,14 +61,20 @@ contract Task4 with Deployable {
     let ctx: Context = context();
 
     if (self.nft != null || msg.forwardPayload.empty()) {
-      self.reply(Transfer{
-        queryId: 0,
-        newOwner: msg.prevOwner,
-        responseDestination: myAddress(),
-        customPayload: emptyCell(),
-        forwardAmount: 0,
-        forwardPayload: emptySlice()
-      }.toCell());
+      send(SendParameters{
+        to: ctx.sender, 
+        value: 0, 
+        mode: SendRemainingValue + SendIgnoreErrors, 
+        bounce: false,
+        body: Transfer{
+          queryId: 0,
+          newOwner: self.owner!!,
+          responseDestination: myAddress(),
+          customPayload: emptyCell(),
+          forwardAmount: 0,
+          forwardPayload: emptySlice()
+        }.toCell()
+      });
 
       return;
     }
