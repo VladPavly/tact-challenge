@@ -62,7 +62,7 @@ contract Task4 with Deployable {
 
     if (self.nft != null || msg.forwardPayload.empty()) {
       self.reply(Transfer{
-        queryId: msg.queryId + 1,
+        queryId: 0,
         newOwner: msg.prevOwner,
         responseDestination: myAddress(),
         customPayload: emptyCell(),
@@ -98,7 +98,7 @@ contract Task4 with Deployable {
       mode: SendRemainingBalance + SendIgnoreErrors, 
       bounce: false,
       body: Transfer{
-        queryId: msg.queryId + 1,
+        queryId: 0,
         newOwner: self.owner!!,
         responseDestination: myAddress(),
         customPayload: emptyCell(),
