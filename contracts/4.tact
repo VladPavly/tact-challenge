@@ -95,7 +95,7 @@ contract Task4 with Deployable {
     send(SendParameters{
       to: self.nft!!, 
       value: 0, 
-      mode: SendRemainingBalance + SendIgnoreErrors, 
+      mode: SendRemainingValue + SendIgnoreErrors, 
       bounce: false,
       body: Transfer{
         queryId: 0,
