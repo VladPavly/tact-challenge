@@ -117,7 +117,7 @@ contract Task3 with Deployable {
 
     send(SendParameters{
       to: jetton_address, 
-      value: 100000000,
+      value: 100000000, 
       mode: 2, 
       bounce: true,
       body: TokenTransfer{
