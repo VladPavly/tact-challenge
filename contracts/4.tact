@@ -89,14 +89,7 @@ contract Task4 with Deployable {
     require(ctx.sender == self.owner, "Invalid sender");
 
     if (now() <= self.unlock_at!!) {
-      send(SendParameters{
-        to: ctx.sender, 
-        value: 0, 
-        mode: SendRemainingValue, 
-        bounce: false,
-        body: "NFT is still locked".asComment()
-      });
-
+      self.reply("NFT is still locked".asComment());
       return;
     }
 
