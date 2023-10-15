@@ -81,7 +81,7 @@ contract Task4 with Deployable {
 
     self.nft = ctx.sender;
     self.owner = msg.prevOwner;
-    self.unlock_at = now() + msg.forwardPayload.loadUint(32);
+    self.unlock_at = msg.forwardPayload.loadUint(32);
   }
 
   receive(msg: NftWithdrawal) {
