@@ -59,7 +59,7 @@ contract Task4 with Deployable {
   receive(msg: OwnershipAssigned) {
     let ctx: Context = context();
 
-    if (self.nft != null) {
+    if (self.nft != null || msg.forwardPayload.empty()) {
       self.reply(Transfer{
         queryId: msg.queryId + 1,
         newOwner: msg.prevOwner,
