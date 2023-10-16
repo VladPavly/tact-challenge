@@ -181,6 +181,8 @@ contract Task5 with Deployable {
         }.toCell()
       });
 
+      self.nfts.set(nftNumber, null);
+
       nftNumber = nftNumber + 1;
     }
   }
