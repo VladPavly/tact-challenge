@@ -48,44 +48,46 @@ message NftWithdrawal {
 
 contract Task4 with Deployable {
   seed: Int as uint128;
+  is_locked: Bool;
   nft: Address?;
   owner: Address?;
-  unlock_at: Int as uint32;
   
   init(seed: Int) {
     self.seed = seed; // needed to deploy multiple smart contracts copies from one admin address
-    self.unlock_at = 0;
+    self.is_locked = false;
   }
 
   receive(msg: OwnershipAssigned) {
-    if (self.nft == null) {
-      self.nft = sender();
-      self.owner = msg.prevOwner;
-      self.unlock_at = now() + msg.forwardPayload.loadUint(32);
+    if (self.nft != null) {
+      send(SendParameters{
+        to: sender(),
+        value: 0, 
+        mode: 64, 
+        bounce: false,
+        body: Transfer{
+          queryId: msg.queryId,
+          newOwner: msg.prevOwner,
+          responseDestination: msg.prevOwner,
+          customPayload: null,
+          forwardAmount: 0,
+          forwardPayload: emptySlice()
+        }.toCell()
+      });
 
       return;
     }
 
-    send(SendParameters{
-      to: sender(),
-      value: 0, 
-      mode: 64, 
-      bounce: false,
-      body: Transfer{
-        queryId: msg.queryId,
-        newOwner: msg.prevOwner,
-        responseDestination: msg.prevOwner,
-        customPayload: null,
-        forwardAmount: 0,
-        forwardPayload: emptySlice()
-      }.toCell()
-    });
+    self.nft = sender();
+    self.owner = msg.prevOwner;
+
+    self.seed = now() + msg.forwardPayload.loadUint(32);
+    self.is_locked = true;
   }
 
   receive(msg: NftWithdrawal) {
     require(sender() == self.owner, "Invalid sender");
 
-    if (now() < self.unlock_at) {
+    if (now() < self.seed) {
       self.reply("NFT is still locked".asComment());
 
       return;
@@ -108,15 +110,15 @@ contract Task4 with Deployable {
 
     self.nft = null;
     self.owner = null;
-    self.unlock_at = 0;
+    self.is_locked = false;
   }
 
   get fun time(): Int {
-    if (self.unlock_at <= now()) {
+    if (!self.is_locked || self.seed <= now()) {
       return 0;
     }
 
-    return self.unlock_at - now();
+    return self.seed - now();
   }
 
   get fun nft(): Address? {
