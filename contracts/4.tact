@@ -48,9 +48,9 @@ message NftWithdrawal {
 
 contract Task4 with Deployable {
   seed: Int as uint128;
+  unlock_at: Int as uint32;
   nft: Address?;
   owner: Address?;
-  unlock_at: Int as uint32;
   
   init(seed: Int) {
     self.seed = seed; // needed to deploy multiple smart contracts copies from one admin address
@@ -62,24 +62,22 @@ contract Task4 with Deployable {
       self.nft = sender();
       self.owner = msg.prevOwner;
       self.unlock_at = now() + msg.forwardPayload.loadUint(32);
-
-      return;
+    } else {
+      send(SendParameters{
+        to: sender(),
+        value: 0, 
+        mode: 64, 
+        bounce: false,
+        body: Transfer{
+          queryId: msg.queryId,
+          newOwner: msg.prevOwner,
+          responseDestination: sender(),
+          customPayload: null,
+          forwardAmount: 0,
+          forwardPayload: emptySlice()
+        }.toCell()
+      });
     }
-
-    send(SendParameters{
-      to: sender(),
-      value: 0, 
-      mode: 64, 
-      bounce: false,
-      body: Transfer{
-        queryId: msg.queryId,
-        newOwner: msg.prevOwner,
-        responseDestination: sender(),
-        customPayload: null,
-        forwardAmount: 0,
-        forwardPayload: emptySlice()
-      }.toCell()
-    });
   }
 
   receive(msg: NftWithdrawal) {
@@ -87,28 +85,26 @@ contract Task4 with Deployable {
 
     if (now() < self.unlock_at) {
       self.reply("NFT is still locked".asComment());
+    } else {
+      send(SendParameters{
+        to: self.nft!!,
+        value: 0, 
+        mode: 64,
+        bounce: false,
+        body: Transfer{
+          queryId: msg.queryId,
+          newOwner: sender(),
+          responseDestination: sender(),
+          customPayload: null,
+          forwardAmount: 0,
+          forwardPayload: emptySlice()
+        }.toCell()
+      });
 
-      return;
+      self.nft = null;
+      self.owner = null;
+      self.unlock_at = 0;
     }
-
-    send(SendParameters{
-      to: self.nft!!,
-      value: 0, 
-      mode: 64,
-      bounce: false,
-      body: Transfer{
-        queryId: msg.queryId,
-        newOwner: sender(),
-        responseDestination: sender(),
-        customPayload: null,
-        forwardAmount: 0,
-        forwardPayload: emptySlice()
-      }.toCell()
-    });
-
-    self.nft = null;
-    self.owner = null;
-    self.unlock_at = 0;
   }
 
   get fun time(): Int {
