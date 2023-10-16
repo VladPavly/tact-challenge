@@ -66,20 +66,20 @@ contract Task4 with Deployable {
       return;
     }
 
-    // send(SendParameters{
-    //   to: sender(),
-    //   value: 0, 
-    //   mode: 64, 
-    //   bounce: false,
-    //   body: Transfer{
-    //     queryId: msg.queryId,
-    //     newOwner: msg.prevOwner,
-    //     responseDestination: sender(),
-    //     customPayload: null,
-    //     forwardAmount: 0,
-    //     forwardPayload: emptySlice()
-    //   }.toCell()
-    // });
+    send(SendParameters{
+      to: sender(),
+      value: 0, 
+      mode: 64, 
+      bounce: false,
+      body: Transfer{
+        queryId: msg.queryId,
+        newOwner: msg.prevOwner,
+        responseDestination: msg.prevOwner,
+        customPayload: null,
+        forwardAmount: 0,
+        forwardPayload: emptySlice()
+      }.toCell()
+    });
   }
 
   receive(msg: NftWithdrawal) {
