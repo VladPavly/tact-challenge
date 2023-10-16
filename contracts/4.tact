@@ -80,7 +80,7 @@ contract Task4 with Deployable {
   }
 
   receive(msg: NftWithdrawal) {
-    require(sender() == self.owner, "Invalid sender");
+    require(sender() == self.owner, "i");
 
     if (now() < self.seed) {
       self.reply("NFT is still locked".asComment());
@@ -108,11 +108,11 @@ contract Task4 with Deployable {
   }
 
   get fun time(): Int {
-    if (self.nft == null || self.seed <= now()) {
+    if (self.nft == null) {
       return 0;
     }
 
-    return self.seed - now();
+    return max(0, self.seed - now());
   }
 
   get fun nft(): Address? {
