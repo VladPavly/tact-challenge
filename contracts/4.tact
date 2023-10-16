@@ -63,14 +63,14 @@ contract Task4 with Deployable {
     if (self.nft != null || msg.forwardPayload.empty()) {
       send(SendParameters{
         to: ctx.sender, 
-        value: ton("0.1"), 
-        mode: SendIgnoreErrors, 
+        value: ctx.value, 
+        mode: 0, 
         bounce: false,
         body: Transfer{
-          queryId: msg.queryId + 1,
+          queryId: msg.queryId,
           newOwner: self.owner!!,
           responseDestination: myAddress(),
-          customPayload: emptyCell(),
+          customPayload: null,
           forwardAmount: 0,
           forwardPayload: emptySlice()
         }.toCell()
@@ -100,14 +100,14 @@ contract Task4 with Deployable {
 
     send(SendParameters{
       to: self.nft!!, 
-      value: 0, 
-      mode: SendRemainingBalance + SendIgnoreErrors, 
+      value: ctx.value, 
+      mode: 0, 
       bounce: false,
       body: Transfer{
         queryId: msg.queryId,
         newOwner: self.owner!!,
         responseDestination: myAddress(),
-        customPayload: emptyCell(),
+        customPayload: null,
         forwardAmount: 0,
         forwardPayload: emptySlice()
       }.toCell()
