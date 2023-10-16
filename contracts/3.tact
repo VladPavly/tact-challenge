@@ -52,11 +52,10 @@ message(0xf8a7ea5) TokenTransfer {
 
 contract Task3 with Deployable {
   owner: Address;
-  aAmount: Int;
-  bAmount: Int;
+  aAmount: Int as uint128;
+  bAmount: Int as uint128;
   jettonAddressA: Address;
   jettonAddressB: Address;
-  decimal: Int;
 
   init(admin: Address, newJettonAddressA: Address, newJettonAddressB: Address) {
     self.owner = admin;
@@ -64,7 +63,6 @@ contract Task3 with Deployable {
     self.jettonAddressB = newJettonAddressB;
     self.aAmount = 0;
     self.bAmount = 0;
-    self.decimal = 1000000000;
   }
 
   receive(msg: TokenNotification) {
@@ -86,9 +84,15 @@ contract Task3 with Deployable {
     );
 
     let jetton_address: Address = self.jettonAddressA;
-    let amount_of_token: Int = self.swap_estimate(context().sender, msg.amount);
 
-    if (context().sender == self.jettonAddressA) {
+    let amount_of_token: Int = 0;
+    if (sender() == self.jettonAddressB) {
+      amount_of_token = (self.aAmount * 1000000000 / self.bAmount) * msg.amount / 1000000000;
+    } else {
+      amount_of_token = (self.bAmount * 1000000000 / self.aAmount) * msg.amount / 1000000000;
+    }
+
+    if (sender() == self.jettonAddressA) {
       if (self.bAmount < amount_of_token) {
         amount_of_token = msg.amount;
       } else {
@@ -97,7 +101,7 @@ contract Task3 with Deployable {
 
         jetton_address = self.jettonAddressB;
       }
-    } else if (context().sender == self.jettonAddressB) {
+    } else if (sender() == self.jettonAddressB) {
       if (self.aAmount < amount_of_token) {
         amount_of_token = msg.amount;
         jetton_address = self.jettonAddressB;
@@ -124,19 +128,11 @@ contract Task3 with Deployable {
     });
   }
 
-  fun swap_estimate(jetton: Address, amount: Int): Int {
-    if (jetton == self.jettonAddressB) {
-      return (self.aAmount * self.decimal / self.bAmount) * amount / self.decimal;
-    } else {
-      return (self.bAmount * self.decimal / self.aAmount) * amount / self.decimal;
-    }
-  }
-
   get fun price(jetton: Address): Int { 
     if (jetton == self.jettonAddressB) {
-      return self.aAmount * self.decimal / self.bAmount;
+      return self.aAmount * 1000000000 / self.bAmount;
     } else {
-      return self.bAmount * self.decimal / self.aAmount;
+      return self.bAmount * 1000000000 / self.aAmount;
     }
   }
   
