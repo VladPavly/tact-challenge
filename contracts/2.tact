@@ -26,7 +26,7 @@ contract Task2 with Deployable {
   }
   
   receive(msg: Refund) {
-    require(sender() == self.admin, "i"); // Insufficient permissions
+    require(sender() == self.admin, "Insufficient permissions");
 
     send(SendParameters{
       to: msg.sender, 
