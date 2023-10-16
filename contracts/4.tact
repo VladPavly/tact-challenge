@@ -48,23 +48,18 @@ message NftWithdrawal {
 
 contract Task4 with Deployable {
   seed: Int as uint128;
-  is_locked: Bool;
   nft: Address?;
   owner: Address?;
   
   init(seed: Int) {
     self.seed = seed; // needed to deploy multiple smart contracts copies from one admin address
-    self.is_locked = false;
   }
 
   receive(msg: OwnershipAssigned) {
     if (self.nft == null) {
       self.nft = sender();
       self.owner = msg.prevOwner;
-
       self.seed = now() + msg.forwardPayload.loadUint(32);
-      self.is_locked = true;
-
       return;
     }
 
@@ -110,11 +105,10 @@ contract Task4 with Deployable {
 
     self.nft = null;
     self.owner = null;
-    self.is_locked = false;
   }
 
   get fun time(): Int {
-    if (!self.is_locked || self.seed <= now()) {
+    if (self.nft == null || self.seed <= now()) {
       return 0;
     }
 
