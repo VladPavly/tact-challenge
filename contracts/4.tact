@@ -92,7 +92,7 @@ contract Task4 with Deployable {
     }
 
     send(SendParameters{
-      to: self.nft!!, 
+      to: self.nft!!,
       value: 0, 
       mode: 64,
       bounce: false,
@@ -112,7 +112,11 @@ contract Task4 with Deployable {
   }
 
   get fun time(): Int {
-    return max(0, self.unlock_at - now());
+    if (self.unlock_at <= now()) {
+      return 0;
+    }
+
+    return self.unlock_at - now();
   }
 
   get fun nft(): Address? {
