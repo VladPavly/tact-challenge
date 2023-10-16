@@ -115,13 +115,7 @@ contract Task4 with Deployable {
   }
 
   get fun time(): Int {
-    let current: Int = now();
-
-    if (self.unlock_at <= current) {
-      return 0;
-    }
-
-    return self.unlock_at - current;
+    return max(0, self.unlock_at - now());
   }
 
   get fun nft(): Address? {
