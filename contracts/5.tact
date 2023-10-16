@@ -70,12 +70,14 @@ contract Task5 with Deployable {
   owner: Address;
   nfts: map<Int as uint16, Address>;
   nftCount: Int as uint8;
+  profit: Int as coins;
   
   init(seed: Int, owner: Address) {
     self.owner = owner;
     self.seed = seed; // needed to deploy multiple smart contracts copies from one admin address
 
     self.nftCount = 0;
+    self.profit = 0;
   }
 
   receive(msg: OwnershipAssigned) {
@@ -121,6 +123,8 @@ contract Task5 with Deployable {
       self.nfts.set(nftNumber, ctx.sender);
     }
 
+    self.profit = self.profit + ton("2");
+    
     send(SendParameters{
       to: nft,
       value: ctx.value - ton("2"),
@@ -142,7 +146,7 @@ contract Task5 with Deployable {
 
     send(SendParameters{
       to: sender(),
-      value: myBalance() - ton("0.1"),
+      value: self.profit - ton("0.1"),
       mode: 0,
       bounce: false,
       body: AdminFetchProfit{
@@ -180,7 +184,7 @@ contract Task5 with Deployable {
   }
 
   get fun profit(): Int {
-    return myBalance() - ton("0.1");
+    return self.profit - ton("0.1");
   }
   
   get fun nfts(): map<Int as uint16, Address> {
