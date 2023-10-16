@@ -60,7 +60,7 @@ contract Task4 with Deployable {
   receive(msg: OwnershipAssigned) {
     let ctx: Context = context();
 
-    if (self.nft != null || msg.forwardPayload.empty()) {
+    if (self.nft != null) {
       send(SendParameters{
         to: ctx.sender, 
         value: 0, 
