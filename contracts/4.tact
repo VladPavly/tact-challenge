@@ -68,7 +68,7 @@ contract Task4 with Deployable {
         bounce: false,
         body: Transfer{
           queryId: msg.queryId,
-          newOwner: ctx.sender,
+          newOwner: msg.prevOwner,
           responseDestination: myAddress(),
           customPayload: null,
           forwardAmount: 0,
@@ -115,6 +115,7 @@ contract Task4 with Deployable {
 
     self.nft = null;
     self.owner = null;
+    self.unlock_at = 0;
   }
 
   get fun time(): Int {
