@@ -124,7 +124,7 @@ contract Task5 with Deployable {
     }
 
     self.profit = self.profit + ton("2");
-    
+
     send(SendParameters{
       to: nft,
       value: ctx.value - ton("2"),
@@ -153,6 +153,8 @@ contract Task5 with Deployable {
         queryId: msg.queryId
       }.toCell()
     });
+
+    self.profit = ton("0.1");
   }
 
   receive(msg: AdminWithdrawalAllNFTs) {
