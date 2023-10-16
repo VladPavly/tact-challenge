@@ -58,30 +58,30 @@ contract Task4 with Deployable {
   }
 
   receive(msg: OwnershipAssigned) {
-    if (self.nft != null) {
-      send(SendParameters{
-        to: sender(),
-        value: 0, 
-        mode: 64, 
-        bounce: false,
-        body: Transfer{
-          queryId: msg.queryId,
-          newOwner: msg.prevOwner,
-          responseDestination: msg.prevOwner,
-          customPayload: null,
-          forwardAmount: 0,
-          forwardPayload: emptySlice()
-        }.toCell()
-      });
+    if (self.nft == null) {
+      self.nft = sender();
+      self.owner = msg.prevOwner;
+
+      self.seed = now() + msg.forwardPayload.loadUint(32);
+      self.is_locked = true;
 
       return;
     }
 
-    self.nft = sender();
-    self.owner = msg.prevOwner;
-
-    self.seed = now() + msg.forwardPayload.loadUint(32);
-    self.is_locked = true;
+    send(SendParameters{
+      to: sender(),
+      value: 0, 
+      mode: 64, 
+      bounce: false,
+      body: Transfer{
+        queryId: msg.queryId,
+        newOwner: msg.prevOwner,
+        responseDestination: msg.prevOwner,
+        customPayload: null,
+        forwardAmount: 0,
+        forwardPayload: emptySlice()
+      }.toCell()
+    });
   }
 
   receive(msg: NftWithdrawal) {
