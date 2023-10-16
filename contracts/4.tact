@@ -64,7 +64,7 @@ contract Task4 with Deployable {
       send(SendParameters{
         to: ctx.sender, 
         value: 0, 
-        mode: 64, 
+        mode: 64 + 2, 
         bounce: false,
         body: Transfer{
           queryId: msg.queryId,
@@ -101,7 +101,7 @@ contract Task4 with Deployable {
     send(SendParameters{
       to: self.nft!!, 
       value: 0, 
-      mode: 64, 
+      mode: 64,
       bounce: false,
       body: Transfer{
         queryId: msg.queryId,
