@@ -142,51 +142,51 @@ contract Task5 with Deployable {
   }
 
   receive(msg: AdminWithdrawalProfit) {
-    require(sender() == self.owner, "Insufficient privelegies");
+    // require(sender() == self.owner, "Insufficient privelegies");
 
-    send(SendParameters{
-      to: sender(),
-      value: myBalance() - ton("0.1"),
-      mode: 0,
-      bounce: false,
-      body: AdminFetchProfit{
-        queryId: msg.queryId
-      }.toCell()
-    });
+    // send(SendParameters{
+    //   to: sender(),
+    //   value: myBalance() - ton("0.1"),
+    //   mode: 0,
+    //   bounce: false,
+    //   body: AdminFetchProfit{
+    //     queryId: msg.queryId
+    //   }.toCell()
+    // });
 
-    self.profit = ton("0.1");
+    // self.profit = ton("0.1");
   }
 
   receive(msg: AdminWithdrawalAllNFTs) {
-    let ctx: Context = context();
+    // let ctx: Context = context();
 
-    require(ctx.value >= (ton("1") + self.nftCount * ton("0.08")), "Insufficent funds");
-    require(ctx.sender == self.owner, "Insufficient privelegies");
+    // require(ctx.value >= (ton("1") + self.nftCount * ton("0.08")), "Insufficent funds");
+    // require(ctx.sender == self.owner, "Insufficient privelegies");
 
-    let nftNumber: Int = 0;
+    // let nftNumber: Int = 0;
 
-    repeat (self.nftCount) {
-      send(SendParameters{
-        to: self.nfts.get(nftNumber)!!,
-        value: ton("0.1"),
-        mode: 0,
-        bounce: false,
-        body: Transfer{
-          queryId: msg.queryId,
-          newOwner: ctx.sender,
-          responseDestination: ctx.sender,
-          customPayload: null,
-          forwardAmount: 0,
-          forwardPayload: emptySlice()
-        }.toCell()
-      });
+    // repeat (self.nftCount) {
+    //   send(SendParameters{
+    //     to: self.nfts.get(nftNumber)!!,
+    //     value: ton("0.1"),
+    //     mode: 0,
+    //     bounce: false,
+    //     body: Transfer{
+    //       queryId: msg.queryId,
+    //       newOwner: ctx.sender,
+    //       responseDestination: ctx.sender,
+    //       customPayload: null,
+    //       forwardAmount: 0,
+    //       forwardPayload: emptySlice()
+    //     }.toCell()
+    //   });
 
-      nftNumber = nftNumber + 1;
-    }
+    //   nftNumber = nftNumber + 1;
+    // }
   }
 
   get fun profit(): Int {
-    return max(0, self.profit - ton("0.1"));
+    return max(0, self.profit - ton("0.01"));
   }
   
   get fun nfts(): map<Int as uint16, Address> {
