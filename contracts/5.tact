@@ -71,7 +71,7 @@ contract Task5 with Deployable {
   owner: Address;
 
   nfts: map<Int as uint16, Address>;
-  nftCount: Int as uint8;
+  nftCount: Int as uint16;
   
   init(seed: Int, owner: Address) {
     self.owner = owner;
