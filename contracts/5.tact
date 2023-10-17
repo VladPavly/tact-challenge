@@ -144,7 +144,7 @@ contract Task5 with Deployable {
     send(SendParameters{
       to: sender(),
       value: myBalance() - ton("0.1"),
-      mode: 0,
+      mode: 2,
       bounce: false,
       body: AdminFetchProfit{
         queryId: msg.queryId
