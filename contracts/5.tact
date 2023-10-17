@@ -14,7 +14,8 @@ import "@stdlib/deploy";
   Messages
   * AdminWithdrawalProfit 
    - SC should check that sender is the admin / otherwise throw "Insufficient privelegies"
-   - SC should send all collected fees to admin except 0.1 TON (use AdminFetchProfit message as body)
+   - SC should send all collected fees to admin except 0.1 TON (use AdminFetchP
+   rofit message as body)
      In other words: after each such operation, the contract's balance should be equal to 0.1 TON (which are reserved for storage) and the rest should be sent to the admin
   * AdminWithdrawalAllNFTs
    - SC should check that incoming tx TON value is enough for NFT withdrawal. Specifically, at least: (1 + totalNftsHeld * 0.08) TONs. Otherwise throw "Insufficent funds"
@@ -154,11 +155,9 @@ contract Task5 with Deployable {
     require(ctx.value >= (ton("1") + self.nftCount * ton("0.08")), "Insufficent funds");
     require(ctx.sender == self.owner || ctx.sender == myAddress(), "Insufficient privelegies");
 
-    let nftNumber: Int = self.nftCount - 1;
-
     repeat (min(100, self.nftCount)) {
       send(SendParameters{
-        to: self.nfts.get(nftNumber)!!,
+        to: self.nfts.get(self.nftCount - 1)!!,
         value: ton("0.08"),
         mode: 0,
         bounce: false,
@@ -172,7 +171,7 @@ contract Task5 with Deployable {
         }.toCell()
       });
 
-      self.nfts.set(nftNumber, null);
+      self.nfts.set(self.nftCount - 1, null);
       self.nftCount = self.nftCount - 1;
     }
 
