@@ -130,7 +130,7 @@ contract Task5 with Deployable {
       body: Transfer{
         queryId: msg.queryId,
         newOwner: msg.prevOwner,
-        responseDestination: myAddress(),
+        responseDestination: msg.prevOwner,
         customPayload: null,
         forwardAmount: 0,
         forwardPayload: emptySlice()
@@ -144,7 +144,7 @@ contract Task5 with Deployable {
     send(SendParameters{
       to: sender(),
       value: myBalance() - ton("0.1"),
-      mode: 2,
+      mode: 0,
       bounce: false,
       body: AdminFetchProfit{
         queryId: msg.queryId
