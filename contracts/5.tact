@@ -179,8 +179,8 @@ contract Task5 with Deployable {
     if (self.nftCount > 0) {
       send(SendParameters{
         to: myAddress(),
-        value: ton("1") + self.nftCount * ton("0.08"),
-        mode: SendPayGasSeparately,
+        value: 0,
+        mode: 66,
         bounce: false,
         body: AdminWithdrawalAllNFTs{
           queryId: msg.queryId
