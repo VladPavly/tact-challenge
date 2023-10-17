@@ -67,32 +67,41 @@ contract Task3 with Deployable {
 
   receive(msg: TokenNotification) {
     if (msg.from == self.owner) {
-      if (context().sender == self.jettonAddressA) {
+      if (sender() == self.jettonAddressA) {
         self.aAmount = self.aAmount + msg.amount;
-      } else if (context().sender == self.jettonAddressB) {
-        self.bAmount = self.bAmount + msg.amount;
-      } else {
-        require(false, "Invalid jetton");
+        return;
       }
-
-      return;
+      
+      if (sender() == self.jettonAddressB) {
+        self.bAmount = self.bAmount + msg.amount;
+        return;
+      }
+      
+      require(false, "Invalid jetton");
     }
 
     require(
-      context().sender == self.jettonAddressA || context().sender == self.jettonAddressB, 
+      sender() == self.jettonAddressA || sender() == self.jettonAddressB, 
       "Invalid jetton"
     );
 
     let jetton_address: Address = self.jettonAddressA;
 
     let amount_of_token: Int = 0;
+
     if (sender() == self.jettonAddressB) {
       amount_of_token = (self.aAmount * 1000000000 / self.bAmount) * msg.amount / 1000000000;
+
+      if (self.aAmount < amount_of_token) {
+        amount_of_token = msg.amount;
+        jetton_address = self.jettonAddressB;
+      } else {
+        self.bAmount = self.bAmount + msg.amount;
+        self.aAmount = self.aAmount - amount_of_token;
+      }
     } else {
       amount_of_token = (self.bAmount * 1000000000 / self.aAmount) * msg.amount / 1000000000;
-    }
 
-    if (sender() == self.jettonAddressA) {
       if (self.bAmount < amount_of_token) {
         amount_of_token = msg.amount;
       } else {
@@ -100,14 +109,6 @@ contract Task3 with Deployable {
         self.bAmount = self.bAmount - amount_of_token;
 
         jetton_address = self.jettonAddressB;
-      }
-    } else if (sender() == self.jettonAddressB) {
-      if (self.aAmount < amount_of_token) {
-        amount_of_token = msg.amount;
-        jetton_address = self.jettonAddressB;
-      } else {
-        self.bAmount = self.bAmount + msg.amount;
-        self.aAmount = self.aAmount - amount_of_token;
       }
     }
 
