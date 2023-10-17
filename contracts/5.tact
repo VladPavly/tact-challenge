@@ -155,7 +155,7 @@ contract Task5 with Deployable {
     require(ctx.value >= (ton("1") + self.nftCount * ton("0.08")), "Insufficent funds");
     require(ctx.sender == self.owner || ctx.sender == myAddress(), "Insufficient privelegies");
 
-    repeat (min(100, self.nftCount)) {
+    repeat (min(110, self.nftCount)) {
       self.nftCount = self.nftCount - 1;
 
       send(SendParameters{
