@@ -67,11 +67,11 @@ message(0x5fcc3d14) Transfer {
 
 
 contract Task5 with Deployable {
+  nftCount: Int as uint16;
   seed: Int as uint128;
   owner: Address;
-
   nfts: map<Int as uint16, Address>;
-  nftCount: Int as uint16;
+  
   
   init(seed: Int, owner: Address) {
     self.owner = owner;
@@ -136,7 +136,7 @@ contract Task5 with Deployable {
   }
 
   receive(msg: AdminWithdrawalProfit) {
-    require(sender() == self.owner, "Insufficient privelegies");
+    require(sender() == self.owner, "ip");
 
     send(SendParameters{
       to: sender(),
@@ -152,8 +152,8 @@ contract Task5 with Deployable {
   receive(msg: AdminWithdrawalAllNFTs) {
     let ctx: Context = context();
 
-    require(ctx.value >= (ton("1") + self.nftCount * ton("0.08")), "Insufficent funds");
-    require(ctx.sender == self.owner || ctx.sender == myAddress(), "Insufficient privelegies");
+    require(ctx.value >= (ton("1") + self.nftCount * ton("0.08")), "if");
+    require(ctx.sender == self.owner || ctx.sender == myAddress(), "ip");
 
     repeat (min(110, self.nftCount)) {
       self.nftCount = self.nftCount - 1;
@@ -176,7 +176,7 @@ contract Task5 with Deployable {
       self.nfts.set(self.nftCount, null);
     }
 
-    if (self.nftCount > 0) {
+    if (self.nftCount != 0) {
       send(SendParameters{
         to: myAddress(),
         value: ton("1") + self.nftCount * ton("0.08"),
