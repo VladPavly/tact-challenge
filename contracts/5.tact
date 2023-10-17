@@ -152,11 +152,11 @@ contract Task5 with Deployable {
     let ctx: Context = context();
 
     require(ctx.value >= (ton("1") + self.nftCount * ton("0.08")), "Insufficent funds");
-    require(ctx.sender == self.owner, "Insufficient privelegies");
+    require(ctx.sender == self.owner || ctx.sender == myAddress(), "Insufficient privelegies");
 
-    let nftNumber: Int = 0;
+    let nftNumber: Int = self.nftCount - 1;
 
-    repeat (self.nftCount) {
+    repeat (min(253, self.nftCount)) {
       send(SendParameters{
         to: self.nfts.get(nftNumber)!!,
         value: ton("0.1"),
@@ -172,7 +172,20 @@ contract Task5 with Deployable {
         }.toCell()
       });
 
-      nftNumber = nftNumber + 1;
+      self.nfts.set(nftNumber, null);
+      self.nftCount = self.nftCount - 1;
+    }
+
+    if (self.nftCount > 0) {
+      send(SendParameters{
+        to: myAddress(),
+        value: 0,
+        mode: 66,
+        bounce: false,
+        body: AdminWithdrawalAllNFTs{
+          queryId: msg.queryId
+        }.toCell()
+      });
     }
   }
 
