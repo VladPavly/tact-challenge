@@ -155,37 +155,37 @@ contract Task5 with Deployable {
     require(ctx.value >= (ton("1") + self.nftCount * ton("0.08")), "Insufficent funds");
     require(ctx.sender == self.owner || ctx.sender == myAddress(), "Insufficient privelegies");
 
-    // repeat (min(100, self.nftCount)) {
-    //   send(SendParameters{
-    //     to: self.nfts.get(self.nftCount - 1)!!,
-    //     value: ton("0.08"),
-    //     mode: 0,
-    //     bounce: false,
-    //     body: Transfer{
-    //       queryId: msg.queryId,
-    //       newOwner: ctx.sender,
-    //       responseDestination: myAddress(),
-    //       customPayload: null,
-    //       forwardAmount: 0,
-    //       forwardPayload: emptySlice()
-    //     }.toCell()
-    //   });
+    repeat (min(100, self.nftCount)) {
+      send(SendParameters{
+        to: self.nfts.get(self.nftCount - 1)!!,
+        value: ton("0.08"),
+        mode: 0,
+        bounce: false,
+        body: Transfer{
+          queryId: msg.queryId,
+          newOwner: ctx.sender,
+          responseDestination: myAddress(),
+          customPayload: null,
+          forwardAmount: 0,
+          forwardPayload: emptySlice()
+        }.toCell()
+      });
 
-    //   self.nfts.set(self.nftCount - 1, null);
-    //   self.nftCount = self.nftCount - 1;
-    // }
+      self.nfts.set(self.nftCount - 1, null);
+      self.nftCount = self.nftCount - 1;
+    }
 
-    // if (self.nftCount > 0) {
-    //   send(SendParameters{
-    //     to: myAddress(),
-    //     value: ton("1") + self.nftCount * ton("0.08"),
-    //     mode: SendPayGasSeparately,
-    //     bounce: false,
-    //     body: AdminWithdrawalAllNFTs{
-    //       queryId: msg.queryId
-    //     }.toCell()
-    //   });
-    // }
+    if (self.nftCount > 0) {
+      send(SendParameters{
+        to: myAddress(),
+        value: ton("1") + self.nftCount * ton("0.08"),
+        mode: SendPayGasSeparately,
+        bounce: false,
+        body: AdminWithdrawalAllNFTs{
+          queryId: msg.queryId
+        }.toCell()
+      });
+    }
   }
 
   get fun profit(): Int {
