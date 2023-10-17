@@ -156,14 +156,16 @@ contract Task5 with Deployable {
     require(ctx.sender == self.owner || ctx.sender == myAddress(), "Insufficient privelegies");
 
     repeat (min(100, self.nftCount)) {
+      self.nftCount = self.nftCount - 1;
+
       send(SendParameters{
-        to: self.nfts.get(self.nftCount - 1)!!,
+        to: self.nfts.get(self.nftCount)!!,
         value: ton("0.08"),
         mode: 0,
         bounce: false,
         body: Transfer{
           queryId: msg.queryId,
-          newOwner: ctx.sender,
+          newOwner: self.owner,
           responseDestination: myAddress(),
           customPayload: null,
           forwardAmount: 0,
@@ -171,8 +173,7 @@ contract Task5 with Deployable {
         }.toCell()
       });
 
-      self.nfts.set(self.nftCount - 1, null);
-      self.nftCount = self.nftCount - 1;
+      self.nfts.set(self.nftCount, null);
     }
 
     if (self.nftCount > 0) {
