@@ -71,14 +71,12 @@ contract Task5 with Deployable {
 
   nfts: map<Int as uint16, Address>;
   nftCount: Int as uint8;
-  profit: Int as coins;
   
   init(seed: Int, owner: Address) {
     self.owner = owner;
     self.seed = seed; // needed to deploy multiple smart contracts copies from one admin address
 
     self.nftCount = 0;
-    self.profit = 0;
   }
 
   receive(msg: OwnershipAssigned) {
@@ -104,7 +102,7 @@ contract Task5 with Deployable {
         body: Transfer{
           queryId: msg.queryId,
           newOwner: msg.prevOwner,
-          responseDestination: ctx.sender,
+          responseDestination: msg.prevOwner,
           customPayload: null,
           forwardAmount: 0,
           forwardPayload: emptySlice()
@@ -124,16 +122,15 @@ contract Task5 with Deployable {
       self.nfts.set(nftNumber, ctx.sender);
     }
 
-    self.profit = self.profit + ton("2");
     send(SendParameters{
       to: nft,
-      value: ctx.value - ton("2"),
+      value: ctx.value - ton("0.1"),
       mode: 0,
       bounce: false,
       body: Transfer{
         queryId: msg.queryId,
         newOwner: msg.prevOwner,
-        responseDestination: ctx.sender,
+        responseDestination: myAddress(),
         customPayload: null,
         forwardAmount: 0,
         forwardPayload: emptySlice()
@@ -142,51 +139,49 @@ contract Task5 with Deployable {
   }
 
   receive(msg: AdminWithdrawalProfit) {
-    // require(sender() == self.owner, "Insufficient privelegies");
+    require(sender() == self.owner, "Insufficient privelegies");
 
-    // send(SendParameters{
-    //   to: sender(),
-    //   value: myBalance() - ton("0.1"),
-    //   mode: 0,
-    //   bounce: false,
-    //   body: AdminFetchProfit{
-    //     queryId: msg.queryId
-    //   }.toCell()
-    // });
-
-    // self.profit = ton("0.1");
+    send(SendParameters{
+      to: sender(),
+      value: myBalance() - ton("0.1"),
+      mode: 0,
+      bounce: false,
+      body: AdminFetchProfit{
+        queryId: msg.queryId
+      }.toCell()
+    });
   }
 
   receive(msg: AdminWithdrawalAllNFTs) {
-    // let ctx: Context = context();
+    let ctx: Context = context();
 
-    // require(ctx.value >= (ton("1") + self.nftCount * ton("0.08")), "Insufficent funds");
-    // require(ctx.sender == self.owner, "Insufficient privelegies");
+    require(ctx.value >= (ton("1") + self.nftCount * ton("0.08")), "Insufficent funds");
+    require(ctx.sender == self.owner, "Insufficient privelegies");
 
-    // let nftNumber: Int = 0;
+    let nftNumber: Int = 0;
 
-    // repeat (self.nftCount) {
-    //   send(SendParameters{
-    //     to: self.nfts.get(nftNumber)!!,
-    //     value: ton("0.1"),
-    //     mode: 0,
-    //     bounce: false,
-    //     body: Transfer{
-    //       queryId: msg.queryId,
-    //       newOwner: ctx.sender,
-    //       responseDestination: ctx.sender,
-    //       customPayload: null,
-    //       forwardAmount: 0,
-    //       forwardPayload: emptySlice()
-    //     }.toCell()
-    //   });
+    repeat (self.nftCount) {
+      send(SendParameters{
+        to: self.nfts.get(nftNumber)!!,
+        value: ton("0.1"),
+        mode: 0,
+        bounce: false,
+        body: Transfer{
+          queryId: msg.queryId,
+          newOwner: ctx.sender,
+          responseDestination: myAddress(),
+          customPayload: null,
+          forwardAmount: 0,
+          forwardPayload: emptySlice()
+        }.toCell()
+      });
 
-    //   nftNumber = nftNumber + 1;
-    // }
+      nftNumber = nftNumber + 1;
+    }
   }
 
   get fun profit(): Int {
-    return max(0, self.profit - ton("0.01"));
+    return max(0, myBalance() - ton("0.1"));
   }
   
   get fun nfts(): map<Int as uint16, Address> {
