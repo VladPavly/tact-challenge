@@ -156,7 +156,7 @@ contract Task5 with Deployable {
 
     let nftNumber: Int = self.nftCount - 1;
 
-    repeat (min(253, self.nftCount)) {
+    repeat (min(100, self.nftCount)) {
       send(SendParameters{
         to: self.nfts.get(nftNumber)!!,
         value: ton("0.1"),
