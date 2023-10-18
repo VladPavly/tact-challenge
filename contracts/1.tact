@@ -24,13 +24,24 @@ contract Task1 with Deployable {
       self.counter = 0;
     }
 
-    receive(msg: Add) {
-        self.counter = self.counter + msg.number;
+    receive(msg: Slice) {
+      let opcode: Int = msg.loadUint(32);
+
+      if (opcode == 0x569a7bc1) {
+        self.counter = self.counter + msg.loadUint(32);
+        return;
+      }
+      
+      self.counter = self.counter - msg.loadUint(32);
     }
+
+    // receive(msg: Add) {
+    //     self.counter = self.counter + msg.number;
+    // }
     
-    receive(msg: Subtract) {
-      self.counter = self.counter - msg.number;
-    }
+    // receive(msg: Subtract) {
+    //   self.counter = self.counter - msg.number;
+    // }
 
     get fun counter(): Int {
       return self.counter;
