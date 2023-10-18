@@ -39,7 +39,7 @@ contract Task2 with Deployable {
         .storeBool(false)
         .storeBool(false)
       .endCell(), 64
-  );
+    );
   }
 
   receive(msg: Slice) {

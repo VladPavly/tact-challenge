@@ -112,22 +112,47 @@ contract Task3 with Deployable {
       }
     }
 
-    send(SendParameters{
-      to: jetton_address, 
-      value: 0, 
-      mode: 64, 
-      bounce: false,
-      body: beginCell()
-              .storeUint(0xf8a7ea5, 32)
-              .storeUint(0, 64)
-              .storeCoins(amount_of_token)
-              .storeAddress(msg.from)
-              .storeAddress(myAddress())
-              .storeBool(false)
-              .storeCoins(ton("0.01"))
-              .storeSlice(emptySlice())
-            .endCell()
-    });
+    nativeSendMessage(
+      beginCell()
+        .storeInt(1, 2)
+        .storeBool(false)
+        .storeInt(0, 3)
+        .storeAddress(jetton_address) // to: 
+        .storeCoins(0) // value:
+        .storeInt(0, 105)
+        .storeBool(false)
+        .storeBool(true)
+        .storeRef(
+          beginCell()
+            .storeUint(0xf8a7ea5, 32)
+            .storeUint(0, 64)
+            .storeCoins(amount_of_token)
+            .storeAddress(msg.from)
+            .storeAddress(myAddress())
+            .storeBool(false)
+            .storeCoins(ton("0.01"))
+            .storeSlice(emptySlice())
+          .endCell()
+        )
+      .endCell(), 64
+    );
+
+    // send(SendParameters{
+    //   to: jetton_address, 
+    //   value: 0, 
+    //   mode: 64, 
+    //   bounce: false,
+    //   body: beginCell()
+    //           .storeUint(0xf8a7ea5, 32)
+    //           .storeUint(0, 64)
+    //           .storeCoins(amount_of_token)
+    //           .storeAddress(msg.from)
+    //           .storeAddress(myAddress())
+    //           .storeBool(false)
+    //           .storeCoins(ton("0.01"))
+    //           .storeSlice(emptySlice())
+    //         .endCell()
+    // });
   }
 
   get fun price(jetton: Address): Int { 
