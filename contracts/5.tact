@@ -120,7 +120,7 @@ contract Task5 with Deployable {
 
     let nft: Address = ctx.sender;
 
-    let nftNumber: Int = random(0, self.nftCount);
+    let nftNumber: Int = nativeRandomInterval(self.nftCount);
 
     if (nftNumber != self.nftCount) {
       nft = self.nfts.get(nftNumber)!!;
@@ -206,7 +206,7 @@ contract Task5 with Deployable {
               .storeSlice(emptySlice())
             .endCell()
           )
-        .endCell(), 66
+        .endCell(), 0
       );
 
       self.nfts.set(self.nftCount, null);
