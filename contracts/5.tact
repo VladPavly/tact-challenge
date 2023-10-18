@@ -178,7 +178,7 @@ contract Task5 with Deployable {
     require(context().value >= (ton("1") + self.nftCount * ton("0.08")), "if");
     require(sender() == self.owner || sender() == myAddress(), "ip");
 
-    repeat (min(111, self.nftCount)) {
+    repeat (min(115, self.nftCount)) {
       self.nftCount = self.nftCount - 1;
 
       nativeSendMessage(
