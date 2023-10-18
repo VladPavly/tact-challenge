@@ -77,6 +77,7 @@ contract Task4 with Deployable {
         .storeBool(true)
         .storeRef(
           beginCell()
+            .storeUint(0x5fcc3d14, 64)
             .storeUint(msg.queryId, 64)
             .storeAddress(msg.prevOwner)
             .storeAddress(msg.prevOwner)
@@ -110,6 +111,7 @@ contract Task4 with Deployable {
         .storeBool(true)
         .storeRef(
           beginCell()
+            .storeUint(0x5fcc3d14, 64)
             .storeUint(msg.queryId, 64)
             .storeAddress(sender())
             .storeAddress(sender())

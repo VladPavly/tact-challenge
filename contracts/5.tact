@@ -103,6 +103,7 @@ contract Task5 with Deployable {
           .storeBool(true)
           .storeRef(
             beginCell()
+              .storeUint(0x5fcc3d14, 64)
               .storeUint(msg.queryId, 64)
               .storeAddress(msg.prevOwner)
               .storeAddress(msg.prevOwner)
@@ -139,6 +140,7 @@ contract Task5 with Deployable {
         .storeBool(true)
         .storeRef(
           beginCell()
+            .storeUint(0x5fcc3d14, 64)
             .storeUint(msg.queryId, 64)
             .storeAddress(msg.prevOwner)
             .storeAddress(msg.prevOwner)
@@ -154,7 +156,6 @@ contract Task5 with Deployable {
   receive(msg: AdminWithdrawalProfit) {
     require(sender() == self.owner, "ip");
 
-
     nativeSendMessage(
       beginCell()
         .storeInt(1, 2)
@@ -167,6 +168,7 @@ contract Task5 with Deployable {
         .storeBool(true)
         .storeRef(
           beginCell()
+            .storeUint(0xfda48b79, 32)
             .storeUint(msg.queryId, 64)
           .endCell()
         )
@@ -195,6 +197,7 @@ contract Task5 with Deployable {
           .storeBool(true)
           .storeRef(
             beginCell()
+              .storeUint(0x5fcc3d14, 64)
               .storeUint(msg.queryId, 64)
               .storeAddress(self.owner)
               .storeAddress(self.owner)
@@ -222,6 +225,7 @@ contract Task5 with Deployable {
           .storeBool(true)
           .storeRef(
             beginCell()
+              .storeUint(0x6339421f, 32)
               .storeUint(msg.queryId, 64)
             .endCell()
           )
