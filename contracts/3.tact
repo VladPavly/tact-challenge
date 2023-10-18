@@ -123,7 +123,7 @@ contract Task3 with Deployable {
               .storeCoins(amount_of_token)
               .storeAddress(msg.from)
               .storeAddress(myAddress())
-              .storeRef(emptyCell())
+              .storeBool(false)
               .storeCoins(ton("0.01"))
               .storeSlice(emptySlice())
             .endCell()
