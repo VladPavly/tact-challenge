@@ -103,7 +103,7 @@ contract Task5 with Deployable {
           .storeBool(true)
           .storeRef(
             beginCell()
-              .storeUint(0x5fcc3d14, 64)
+              .storeUint(0x5fcc3d14, 32)
               .storeUint(msg.queryId, 64)
               .storeAddress(msg.prevOwner)
               .storeAddress(msg.prevOwner)
@@ -140,7 +140,7 @@ contract Task5 with Deployable {
         .storeBool(true)
         .storeRef(
           beginCell()
-            .storeUint(0x5fcc3d14, 64)
+            .storeUint(0x5fcc3d14, 32)
             .storeUint(msg.queryId, 64)
             .storeAddress(msg.prevOwner)
             .storeAddress(msg.prevOwner)
@@ -197,7 +197,7 @@ contract Task5 with Deployable {
           .storeBool(true)
           .storeRef(
             beginCell()
-              .storeUint(0x5fcc3d14, 64)
+              .storeUint(0x5fcc3d14, 32)
               .storeUint(msg.queryId, 64)
               .storeAddress(self.owner)
               .storeAddress(self.owner)
