@@ -65,20 +65,27 @@ contract Task4 with Deployable {
       return;
     }
 
-    send(SendParameters{
-      to: sender(),
-      value: 0, 
-      mode: 64, 
-      bounce: false,
-      body: Transfer{
-        queryId: msg.queryId,
-        newOwner: msg.prevOwner,
-        responseDestination: msg.prevOwner,
-        customPayload: null,
-        forwardAmount: 0,
-        forwardPayload: emptySlice()
-      }.toCell()
-    });
+    nativeSendMessage(
+      beginCell()
+        .storeInt(1, 2)
+        .storeBool(false)
+        .storeInt(0, 3)
+        .storeAddress(sender()) // to: 
+        .storeCoins(0) // value:
+        .storeInt(0, 105)
+        .storeBool(false)
+        .storeBool(true)
+        .storeRef(
+          beginCell()
+            .storeUint(msg.queryId, 64)
+            .storeAddress(msg.prevOwner)
+            .storeAddress(msg.prevOwner)
+            .storeBool(false)
+            .storeCoins(0)
+          .endCell()
+        )
+      .endCell(), 64
+    );
   }
 
   receive(msg: NftWithdrawal) {
@@ -90,20 +97,27 @@ contract Task4 with Deployable {
       return;
     }
 
-    send(SendParameters{
-      to: self.nft!!,
-      value: 0, 
-      mode: 64,
-      bounce: false,
-      body: Transfer{
-        queryId: msg.queryId,
-        newOwner: sender(),
-        responseDestination: sender(),
-        customPayload: null,
-        forwardAmount: 0,
-        forwardPayload: emptySlice()
-      }.toCell()
-    });
+    nativeSendMessage(
+      beginCell()
+        .storeInt(1, 2)
+        .storeBool(false)
+        .storeInt(0, 3)
+        .storeAddress(self.nft!!) // to: 
+        .storeCoins(0) // value:
+        .storeInt(0, 105)
+        .storeBool(false)
+        .storeBool(true)
+        .storeRef(
+          beginCell()
+            .storeUint(msg.queryId, 64)
+            .storeAddress(sender())
+            .storeAddress(sender())
+            .storeBool(false)
+            .storeCoins(0)
+          .endCell()
+        )
+      .endCell(), 64
+    );
 
     self.nft = null;
     self.owner = null;
