@@ -28,24 +28,38 @@ contract Task2 with Deployable {
   receive(msg: Refund) {
     require(sender() == self.admin, "i");
 
-    send(SendParameters{
-      to: msg.sender, 
-      value: 0,
-      mode: 64, 
-      bounce: false
-    });
+    nativeSendMessage(
+      beginCell()
+        .storeInt(1, 2)
+        .storeBool(false)
+        .storeInt(0, 3)
+        .storeAddress(msg.sender) // to: 
+        .storeCoins(0) // value:
+        .storeInt(0, 105)
+        .storeBool(false)
+        .storeBool(false)
+      .endCell(), 64
+  );
   }
 
   receive(msg: Slice) {
-    send(SendParameters{
-      to: self.admin, 
-      value: 0,
-      mode: 64, 
-      bounce: false, 
-      body: beginCell()
-              .storeAddress(sender())
-              .storeRef(msg.asCell())
-            .endCell()
-    });
+    nativeSendMessage(
+      beginCell()
+        .storeInt(1, 2)
+        .storeBool(false)
+        .storeInt(0, 3)
+        .storeAddress(self.admin) // to: 
+        .storeCoins(0) // value:
+        .storeInt(0, 105)
+        .storeBool(false)
+        .storeBool(true)
+        .storeRef(
+          beginCell()
+            .storeAddress(sender())
+            .storeRef(msg.asCell())
+          .endCell()
+        )
+      .endCell(), 64
+    );
   }
 }
