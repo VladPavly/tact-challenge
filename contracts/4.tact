@@ -50,16 +50,18 @@ contract Task4 with Deployable {
   seed: Int as uint128;
   nft: Address?;
   owner: Address?;
+  unlock_at: Int as uint32;
   
   init(seed: Int) {
     self.seed = seed;
+    self.unlock_at = 0;
   }
 
   receive(msg: OwnershipAssigned) {
     if (self.nft == null) {
       self.nft = sender();
       self.owner = msg.prevOwner;
-      self.seed = now() + msg.forwardPayload.loadUint(32);
+      self.unlock_at = now() + msg.forwardPayload.loadUint(32);
       return;
     }
 
@@ -82,7 +84,7 @@ contract Task4 with Deployable {
   receive(msg: NftWithdrawal) {
     require(sender() == self.owner, "Invalid sender");
 
-    if (now() < self.seed) {
+    if (now() < self.unlock_at) {
       self.reply("NFT is still locked".asComment());
 
       return;
@@ -108,11 +110,7 @@ contract Task4 with Deployable {
   }
 
   get fun time(): Int {
-    if (self.nft == null) {
-      return 0;
-    }
-
-    return max(0, self.seed - now());
+    return max(0, self.unlock_at - now());
   }
 
   get fun nft(): Address? {

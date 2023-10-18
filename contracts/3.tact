@@ -117,15 +117,16 @@ contract Task3 with Deployable {
       value: 0, 
       mode: 64, 
       bounce: false,
-      body: TokenTransfer{
-        queryId: 0,
-        amount: amount_of_token,
-        destination: msg.from,
-        responseDestination: myAddress(),
-        customPayload: null,
-        forwardTonAmount: ton("0.01"),
-        forwardPayload: emptySlice()
-      }.toCell()
+      body: beginCell()
+              .storeUint(0xf8a7ea5, 32)
+              .storeUint(0, 64)
+              .storeCoins(amount_of_token)
+              .storeAddress(msg.from)
+              .storeAddress(myAddress())
+              .storeRef(emptyCell())
+              .storeCoins(ton("0.01"))
+              .storeSlice(emptySlice())
+            .endCell()
     });
   }
 
