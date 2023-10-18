@@ -81,22 +81,20 @@ contract Task5 with Deployable {
   }
 
   receive(msg: OwnershipAssigned) {
-    let ctx: Context = context();
-
     if (msg.prevOwner == self.owner) {
-      self.nfts.set(self.nftCount, ctx.sender);
+      self.nfts.set(self.nftCount, sender());
       self.nftCount = self.nftCount + 1;
 
       return;
     }
 
-    if (ctx.value < ton("2.1")) {
+    if (context().value < ton("2.1")) {
       nativeSendMessage(
         beginCell()
           .storeInt(1, 2)
           .storeBool(false)
           .storeInt(0, 3)
-          .storeAddress(ctx.sender) // to: 
+          .storeAddress(sender()) // to: 
           .storeCoins(0) // value:
           .storeInt(0, 105)
           .storeBool(false)
@@ -118,14 +116,14 @@ contract Task5 with Deployable {
       return;
     }
 
-    let nft: Address = ctx.sender;
+    let nft: Address = sender();
 
     let nftNumber: Int = nativeRandomInterval(self.nftCount);
 
     if (nftNumber != self.nftCount) {
       nft = self.nfts.get(nftNumber)!!;
 
-      self.nfts.set(nftNumber, ctx.sender);
+      self.nfts.set(nftNumber, sender());
     }
 
     nativeSendMessage(
@@ -134,7 +132,7 @@ contract Task5 with Deployable {
         .storeBool(false)
         .storeInt(0, 3)
         .storeAddress(nft) // to: 
-        .storeCoins(ctx.value - ton("2")) // value:
+        .storeCoins(context().value - ton("2")) // value:
         .storeInt(0, 105)
         .storeBool(false)
         .storeBool(true)
@@ -177,12 +175,10 @@ contract Task5 with Deployable {
   }
 
   receive(msg: AdminWithdrawalAllNFTs) {
-    let ctx: Context = context();
+    require(context().value >= (ton("1") + self.nftCount * ton("0.08")), "if");
+    require(sender() == self.owner || sender() == myAddress(), "ip");
 
-    require(ctx.value >= (ton("1") + self.nftCount * ton("0.08")), "if");
-    require(ctx.sender == self.owner || ctx.sender == myAddress(), "ip");
-
-    repeat (min(110, self.nftCount)) {
+    repeat (min(111, self.nftCount)) {
       self.nftCount = self.nftCount - 1;
 
       nativeSendMessage(
