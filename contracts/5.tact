@@ -229,7 +229,7 @@ contract Task5 with Deployable {
               .storeUint(msg.queryId, 64)
             .endCell()
           )
-        .endCell(), 0
+        .endCell(), 1
       );
     }
   }
