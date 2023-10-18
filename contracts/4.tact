@@ -82,6 +82,7 @@ contract Task4 with Deployable {
             .storeAddress(msg.prevOwner)
             .storeBool(false)
             .storeCoins(0)
+            .storeSlice(emptySlice())
           .endCell()
         )
       .endCell(), 64
@@ -114,6 +115,7 @@ contract Task4 with Deployable {
             .storeAddress(sender())
             .storeBool(false)
             .storeCoins(0)
+            .storeSlice(emptySlice())
           .endCell()
         )
       .endCell(), 64

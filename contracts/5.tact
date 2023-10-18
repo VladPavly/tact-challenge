@@ -91,20 +91,28 @@ contract Task5 with Deployable {
     }
 
     if (ctx.value < ton("2.1")) {
-      send(SendParameters{
-        to: ctx.sender,
-        value: 0,
-        mode: 66,
-        bounce: false,
-        body: Transfer{
-          queryId: msg.queryId,
-          newOwner: msg.prevOwner,
-          responseDestination: msg.prevOwner,
-          customPayload: null,
-          forwardAmount: 0,
-          forwardPayload: emptySlice()
-        }.toCell()
-      });
+      nativeSendMessage(
+        beginCell()
+          .storeInt(1, 2)
+          .storeBool(false)
+          .storeInt(0, 3)
+          .storeAddress(ctx.sender) // to: 
+          .storeCoins(0) // value:
+          .storeInt(0, 105)
+          .storeBool(false)
+          .storeBool(true)
+          .storeRef(
+            beginCell()
+              .storeUint(msg.queryId, 64)
+              .storeAddress(msg.prevOwner)
+              .storeAddress(msg.prevOwner)
+              .storeBool(false)
+              .storeCoins(0)
+              .storeSlice(emptySlice())
+            .endCell()
+          )
+        .endCell(), 66
+      );
 
       return;
     }
@@ -119,34 +127,51 @@ contract Task5 with Deployable {
       self.nfts.set(nftNumber, ctx.sender);
     }
 
-    send(SendParameters{
-      to: nft,
-      value: ctx.value - ton("2"),
-      mode: 0,
-      bounce: false,
-      body: Transfer{
-        queryId: msg.queryId,
-        newOwner: msg.prevOwner,
-        responseDestination: msg.prevOwner,
-        customPayload: null,
-        forwardAmount: 0,
-        forwardPayload: emptySlice()
-      }.toCell()
-    });
+    nativeSendMessage(
+      beginCell()
+        .storeInt(1, 2)
+        .storeBool(false)
+        .storeInt(0, 3)
+        .storeAddress(nft) // to: 
+        .storeCoins(ctx.value - ton("2")) // value:
+        .storeInt(0, 105)
+        .storeBool(false)
+        .storeBool(true)
+        .storeRef(
+          beginCell()
+            .storeUint(msg.queryId, 64)
+            .storeAddress(msg.prevOwner)
+            .storeAddress(msg.prevOwner)
+            .storeBool(false)
+            .storeCoins(0)
+            .storeSlice(emptySlice())
+          .endCell()
+        )
+      .endCell(), 66
+    );
   }
 
   receive(msg: AdminWithdrawalProfit) {
     require(sender() == self.owner, "ip");
 
-    send(SendParameters{
-      to: sender(),
-      value: myBalance() - ton("0.1"),
-      mode: 0,
-      bounce: false,
-      body: AdminFetchProfit{
-        queryId: msg.queryId
-      }.toCell()
-    });
+
+    nativeSendMessage(
+      beginCell()
+        .storeInt(1, 2)
+        .storeBool(false)
+        .storeInt(0, 3)
+        .storeAddress(sender()) // to: 
+        .storeCoins(myBalance() - ton("0.1")) // value:
+        .storeInt(0, 105)
+        .storeBool(false)
+        .storeBool(true)
+        .storeRef(
+          beginCell()
+            .storeUint(msg.queryId, 64)
+          .endCell()
+        )
+      .endCell(), 0
+    );
   }
 
   receive(msg: AdminWithdrawalAllNFTs) {
@@ -158,34 +183,50 @@ contract Task5 with Deployable {
     repeat (min(110, self.nftCount)) {
       self.nftCount = self.nftCount - 1;
 
-      send(SendParameters{
-        to: self.nfts.get(self.nftCount)!!,
-        value: ton("0.08"),
-        mode: 0,
-        bounce: false,
-        body: Transfer{
-          queryId: msg.queryId,
-          newOwner: self.owner,
-          responseDestination: self.owner,
-          customPayload: null,
-          forwardAmount: 0,
-          forwardPayload: emptySlice()
-        }.toCell()
-      });
+      nativeSendMessage(
+        beginCell()
+          .storeInt(1, 2)
+          .storeBool(false)
+          .storeInt(0, 3)
+          .storeAddress(self.nfts.get(self.nftCount)!!) // to: 
+          .storeCoins(ton("0.08")) // value:
+          .storeInt(0, 105)
+          .storeBool(false)
+          .storeBool(true)
+          .storeRef(
+            beginCell()
+              .storeUint(msg.queryId, 64)
+              .storeAddress(self.owner)
+              .storeAddress(self.owner)
+              .storeBool(false)
+              .storeCoins(0)
+              .storeSlice(emptySlice())
+            .endCell()
+          )
+        .endCell(), 66
+      );
 
       self.nfts.set(self.nftCount, null);
     }
 
     if (self.nftCount != 0) {
-      send(SendParameters{
-        to: myAddress(),
-        value: ton("1") + self.nftCount * ton("0.08"),
-        mode: 1,
-        bounce: false,
-        body: AdminWithdrawalAllNFTs{
-          queryId: msg.queryId
-        }.toCell()
-      });
+      nativeSendMessage(
+        beginCell()
+          .storeInt(1, 2)
+          .storeBool(false)
+          .storeInt(0, 3)
+          .storeAddress(myAddress()) // to: 
+          .storeCoins(ton("1") + self.nftCount * ton("0.08")) // value:
+          .storeInt(0, 105)
+          .storeBool(false)
+          .storeBool(true)
+          .storeRef(
+            beginCell()
+              .storeUint(msg.queryId, 64)
+            .endCell()
+          )
+        .endCell(), 66
+      );
     }
   }
 
