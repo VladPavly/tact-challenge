@@ -94,7 +94,21 @@ contract Task4 with Deployable {
     require(sender() == self.owner, "Invalid sender");
 
     if (now() < self.unlock_at) {
-      self.reply("NFT is still locked".asComment());
+      nativeSendMessage(
+        beginCell()
+          .storeInt(1, 2)
+          .storeBool(false)
+          .storeInt(0, 3)
+          .storeAddress(sender()) // to: 
+          .storeCoins(0) // value:
+          .storeInt(0, 105)
+          .storeBool(false)
+          .storeBool(true)
+          .storeRef(
+            "NFT is still locked".asComment()
+          )
+        .endCell(), 66
+      );
 
       return;
     }
