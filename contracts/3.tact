@@ -77,16 +77,16 @@ contract Task3 with Deployable {
         return;
       }
       
-      require(false, "Invalid jetton");
+      // require(false, "Invalid jetton");
+      nativeThrow(1000);
     }
 
-    require(
-      sender() == self.jettonAddressA || sender() == self.jettonAddressB, 
-      "Invalid jetton"
-    );
+    // nativeThrowUnless(
+    //   1000,
+    //   sender() == self.jettonAddressA || sender() == self.jettonAddressB
+    // );
 
     let jetton_address: Address = self.jettonAddressA;
-
     let amount_of_token: Int = 0;
 
     if (sender() == self.jettonAddressB) {
@@ -99,7 +99,7 @@ contract Task3 with Deployable {
         self.bAmount = self.bAmount + msg.amount;
         self.aAmount = self.aAmount - amount_of_token;
       }
-    } else {
+    } else if (sender() == self.jettonAddressA) {
       amount_of_token = (self.bAmount * 1000000000 / self.aAmount) * msg.amount / 1000000000;
 
       if (self.bAmount < amount_of_token) {
@@ -110,6 +110,8 @@ contract Task3 with Deployable {
 
         jetton_address = self.jettonAddressB;
       }
+    } else {
+      nativeThrow(1000);
     }
 
     nativeSendMessage(

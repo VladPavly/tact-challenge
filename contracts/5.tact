@@ -153,7 +153,7 @@ contract Task5 with Deployable {
   }
 
   receive(msg: AdminWithdrawalProfit) {
-    require(sender() == self.owner, "ip");
+    nativeThrowUnless(1000, sender() == self.owner);
 
     nativeSendMessage(
       beginCell()
@@ -176,18 +176,23 @@ contract Task5 with Deployable {
   }
 
   receive(msg: AdminWithdrawalAllNFTs) {
-    require(context().value >= (ton("1") + self.nftCount * ton("0.08")), "if");
-    require(sender() == self.owner || sender() == myAddress(), "ip");
+    nativeThrowUnless(1000, context().value >= (ton("1") + self.nftCount * ton("0.08")));
+    nativeThrowUnless(1000, sender() == self.owner || sender() == myAddress());
+
+    // require(context().value >= (ton("1") + self.nftCount * ton("0.08")), "if");
+    // require(sender() == self.owner || sender() == myAddress(), "ip");
+
+    let i: Int = self.nftCount - 1;
 
     repeat (min(120, self.nftCount)) {
-      self.nftCount = self.nftCount - 1;
+      // self.nftCount = self.nftCount - 1;
 
       nativeSendMessage(
         beginCell()
           .storeInt(1, 2)
           .storeBool(false)
           .storeInt(0, 3)
-          .storeAddress(self.nfts.get(self.nftCount)!!) // to: 
+          .storeAddress(self.nfts.get(i)!!) // to: 
           .storeCoins(ton("0.08")) // value:
           .storeInt(0, 105)
           .storeBool(false)
@@ -206,7 +211,8 @@ contract Task5 with Deployable {
         .endCell(), 0
       );
 
-      self.nfts.set(self.nftCount, null);
+      self.nfts.set(i, null);
+      i = i - 1;
     }
 
     if (self.nftCount != 0) {

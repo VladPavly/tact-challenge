@@ -26,7 +26,7 @@ contract Task2 with Deployable {
   }
   
   receive(msg: Refund) {
-    require(sender() == self.admin, "i");
+    nativeThrowUnless(1000, sender() == self.admin);
 
     nativeSendMessage(
       beginCell()

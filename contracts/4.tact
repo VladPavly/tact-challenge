@@ -91,7 +91,7 @@ contract Task4 with Deployable {
   }
 
   receive(msg: NftWithdrawal) {
-    require(sender() == self.owner, "i");
+    nativeThrowUnless(1000, sender() == self.owner);
 
     if (now() < self.unlock_at) {
       nativeSendMessage(
