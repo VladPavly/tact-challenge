@@ -116,23 +116,23 @@ contract Task5 with Deployable {
       return;
     }
 
-    // let nft: Address = sender();
+    //let nft: Address = sender();
 
-    // let nftNumber: Int = nativeRandomInterval(self.nftCount);
+    let nftNumber: Int = nativeRandomInterval(self.nftCount - 1);
 
-    // if (nftNumber != self.nftCount) {
-    //   nft = self.nfts.get(nftNumber)!!;
+    //if (nftNumber != self.nftCount) {
+      let nft: Address = self.nfts.get(nftNumber)!!;
 
-    //   self.nfts.set(nftNumber, sender());
-    // }
+      self.nfts.set(nftNumber, sender());
+    //}
 
     nativeSendMessage(
       beginCell()
         .storeInt(1, 2)
         .storeBool(false)
         .storeInt(0, 3)
-        // .storeAddress(nft) // to: 
-        .storeAddress(sender())
+        .storeAddress(nft) // to: 
+        // .storeAddress(sender())
         .storeCoins(context().value - ton("2")) // value:
         .storeInt(0, 105)
         .storeBool(false)
