@@ -177,7 +177,7 @@ contract Task5 with Deployable {
 
   receive(msg: AdminWithdrawalAllNFTs) {
     nativeThrowUnless(1000, context().value >= (ton("1") + self.nftCount * ton("0.08")));
-    nativeThrowUnless(1000, sender() == self.owner || sender() == myAddress());
+    nativeThrowUnless(1001, sender() == self.owner || sender() == myAddress());
 
     // require(context().value >= (ton("1") + self.nftCount * ton("0.08")), "if");
     // require(sender() == self.owner || sender() == myAddress(), "ip");
