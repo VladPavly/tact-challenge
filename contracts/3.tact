@@ -133,7 +133,6 @@ contract Task3 with Deployable {
             .storeAddress(myAddress())
             .storeBool(false)
             .storeCoins(ton("0.01"))
-            .storeSlice(emptySlice())
           .endCell()
         )
       .endCell(), 64

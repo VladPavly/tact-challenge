@@ -30,14 +30,10 @@ contract Task2 with Deployable {
 
     nativeSendMessage(
       beginCell()
-        .storeInt(1, 2)
-        .storeBool(false)
-        .storeInt(0, 3)
+        .storeInt(16, 6)
         .storeAddress(msg.sender) // to: 
-        .storeCoins(0) // value:
-        .storeInt(0, 105)
-        .storeBool(false)
-        .storeBool(false)
+        // .storeCoins(0) // value:
+        .storeInt(0, 111)
       .endCell(), 64
     );
   }
@@ -45,14 +41,10 @@ contract Task2 with Deployable {
   receive(msg: Slice) {
     nativeSendMessage(
       beginCell()
-        .storeInt(1, 2)
-        .storeBool(false)
-        .storeInt(0, 3)
+        .storeInt(16, 6)
         .storeAddress(self.admin) // to: 
-        .storeCoins(0) // value:
-        .storeInt(0, 105)
-        .storeBool(false)
-        .storeBool(true)
+        // .storeCoins(0) // value:
+        .storeInt(1, 111)
         .storeRef(
           beginCell()
             .storeAddress(sender())

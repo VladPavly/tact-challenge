@@ -205,7 +205,6 @@ contract Task5 with Deployable {
               .storeAddress(self.owner)
               .storeBool(false)
               .storeCoins(0)
-              .storeSlice(emptySlice())
             .endCell()
           )
         .endCell(), 0
@@ -216,7 +215,7 @@ contract Task5 with Deployable {
     }
 
     self.nftCount = max(self.nftCount - 120, 0);
-    
+
     if (self.nftCount != 0) {
       nativeSendMessage(
         beginCell()
