@@ -215,6 +215,8 @@ contract Task5 with Deployable {
       i = i - 1;
     }
 
+    self.nftCount = max(self.nftCount - 120, 0);
+    
     if (self.nftCount != 0) {
       nativeSendMessage(
         beginCell()
