@@ -1066,6 +1066,11 @@ blockstore-core@1.0.5:
     it-take "^1.0.1"
     multiformats "^9.4.7"
 
+blueprint@^2.1.5:
+  version "2.1.5"
+  resolved "https://registry.yarnpkg.com/blueprint/-/blueprint-2.1.5.tgz#1d8b077bf93060e92a6c617dca5539e118772fb0"
+  integrity sha512-gPXtQTFjeHmb6TDmwL1KSVwZIoUSIqhGYAYRz0AvEvp/6JPOrdENYL4zsAYp7HKHTnjKMngOsGUFv7czUj5vpQ==
+
 bn.js@4.11.6:
   version "4.11.6"
   resolved "https://registry.yarnpkg.com/bn.js/-/bn.js-4.11.6.tgz#53344adb14617a13f6e8dd2ce28905d1c0ba3215"

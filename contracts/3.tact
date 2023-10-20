@@ -61,9 +61,12 @@ contract Task3 with Deployable {
     self.owner = admin;
 
     let slice: Slice = newJettonAddressA.asSlice();
-    self.jettonAddressA = slice.skipBits(11).loadUint(256);
+    slice.skipBits(11);
+    self.jettonAddressA = slice.loadUint(256);
+
     slice = newJettonAddressB.asSlice();
-    self.jettonAddressB = slice.skipBits(11).loadUint(256);
+    slice.skipBits(11);
+    self.jettonAddressB = slice.loadUint(256);
 
     self.aAmount = 0;
     self.bAmount = 0;
@@ -71,7 +74,8 @@ contract Task3 with Deployable {
 
   receive(msg: TokenNotification) {
     let sender_slice: Slice = sender().asSlice();
-    let sender_hash: Int = sender_slice.skipBits(11).loadUint(256);
+    sender_slice.skipBits(11);
+    let sender_hash: Int = sender_slice.loadUint(256);
 
     if (msg.from == self.owner) {
       if (sender_hash == self.jettonAddressA) {
@@ -240,8 +244,9 @@ contract Task3 with Deployable {
 
   get fun price(jetton: Address): Int { 
     let jetton_slice: Slice = sender().asSlice();
+    jetton_slice.skipBits(11);
 
-    if (jetton_slice.skipBits(11).loadUint(256) == self.jettonAddressB) {
+    if (jetton_slice.loadUint(256) == self.jettonAddressB) {
       return self.aAmount * 1000000000 / self.bAmount;
     }
     
@@ -250,8 +255,9 @@ contract Task3 with Deployable {
   
   get fun balance(jetton: Address): Int { 
     let jetton_slice: Slice = sender().asSlice();
+    jetton_slice.skipBits(11);
 
-    if (jetton_slice.skipBits(11).loadUint(256) == self.jettonAddressA) {
+    if (jetton_slice.loadUint(256) == self.jettonAddressA) {
       return self.aAmount;
     }
     
