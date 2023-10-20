@@ -19,14 +19,14 @@ message(0x44) Refund {
 }
 
 contract Task2 with Deployable {
-  admin: Address;
+  admin: Int as uint256;
 
   init(admin: Address) {
-    self.admin = admin;
+    self.admin = admin.asSlice().skipBits(11).loadUint(256);
   }
   
   receive(msg: Refund) {
-    nativeThrowUnless(1000, sender() == self.admin);
+    nativeThrowUnless(1000, sender().asSlice().skipBits(11).loadUint(256) == self.admin);
 
     nativeSendMessage(
       beginCell()
@@ -41,8 +41,9 @@ contract Task2 with Deployable {
   receive(msg: Slice) {
     nativeSendMessage(
       beginCell()
-        .storeUint(16, 6)
-        .storeAddress(self.admin) // to: 
+        .storeUint(33792, 17)
+        .storeUint(self.admin, 256)
+        // .storeSlice(self.admin) // to: 
         // .storeCoins(0) // value:
         .storeUint(1, 111)
         .storeRef(
