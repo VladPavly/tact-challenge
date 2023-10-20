@@ -51,16 +51,18 @@ message(0xf8a7ea5) TokenTransfer {
 }
 
 contract Task3 with Deployable {
-  owner: Address;
+  owner: Int as uint256;
   aAmount: Int as uint128;
   bAmount: Int as uint128;
   jettonAddressA: Int as uint256;
   jettonAddressB: Int as uint256;
 
   init(admin: Address, newJettonAddressA: Address, newJettonAddressB: Address) {
-    self.owner = admin;
+    let slice: Slice = admin.asSlice();
+    slice.skipBits(11);
+    self.owner = slice.loadUint(256);
 
-    let slice: Slice = newJettonAddressA.asSlice();
+    slice = newJettonAddressA.asSlice();
     slice.skipBits(11);
     self.jettonAddressA = slice.loadUint(256);
 
@@ -77,7 +79,11 @@ contract Task3 with Deployable {
     sender_slice.skipBits(11);
     let sender_hash: Int = sender_slice.loadUint(256);
 
-    if (msg.from == self.owner) {
+    let user_slice: Slice = msg.from.asSlice();
+    user_slice.skipBits(11);
+    let user_hash: Int = user_slice.loadUint(256);
+
+    if (user_hash == self.owner) {
       if (sender_hash == self.jettonAddressA) {
         self.aAmount = self.aAmount + msg.amount;
         return;

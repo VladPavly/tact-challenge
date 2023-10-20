@@ -48,8 +48,8 @@ message NftWithdrawal {
 
 contract Task4 with Deployable {
   seed: Int as uint128;
-  nft: Address?;
-  owner: Address?;
+  nft: Int? as uint256;
+  owner: Int? as uint256;
   unlock_at: Int as uint32;
   
   init(seed: Int) {
@@ -59,8 +59,13 @@ contract Task4 with Deployable {
 
   receive(msg: OwnershipAssigned) {
     if (self.nft == null) {
-      self.nft = sender();
-      self.owner = msg.prevOwner;
+      let slice: Slice = sender().asSlice();
+      slice.skipBits(11);
+      self.nft = slice.loadUint(256);
+
+      slice = msg.prevOwner.asSlice();
+      slice.skipBits(11);
+      self.owner = slice.loadUint(256);
       self.unlock_at = now() + msg.forwardPayload.loadUint(32);
       return;
     }
@@ -87,13 +92,17 @@ contract Task4 with Deployable {
   }
 
   receive(msg: NftWithdrawal) {
-    nativeThrowUnless(1000, sender() == self.owner);
+    let sender_slice: Slice = sender().asSlice();
+    sender_slice.skipBits(11);
+    let sender_hash: Int = sender_slice.loadUint(256);
+
+    nativeThrowUnless(1000, sender_hash == self.owner);
 
     if (now() < self.unlock_at) {
       nativeSendMessage(
         beginCell()
-          .storeUint(16, 6)
-          .storeAddress(sender()) // to: 
+          .storeUint(33792, 17)
+          .storeUint(sender_hash, 256) // to: 
           // .storeCoins(0) // value:
           .storeUint(1, 111)
           // .storeBool(false)
@@ -109,8 +118,8 @@ contract Task4 with Deployable {
 
     nativeSendMessage(
       beginCell()
-        .storeUint(16, 6)
-        .storeAddress(self.nft!!) // to: 
+        .storeUint(33792, 17)
+        .storeUint(self.nft!!, 256) // to: 
         // .storeCoins(0) // value:
         .storeUint(1, 111)
         .storeRef(
@@ -134,10 +143,18 @@ contract Task4 with Deployable {
   }
 
   get fun nft(): Address? {
-    return self.nft;
+    if (self.nft == null) {
+      return null;
+    }
+
+    return newAddress(1024, self.nft!!);
   }
 
   get fun owner(): Address? {
-    return self.owner;
+    if (self.owner == null) {
+      return null;
+    }
+
+    return newAddress(1024, self.owner!!);
   }
 }
