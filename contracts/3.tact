@@ -191,6 +191,8 @@ contract Task3 with Deployable {
           )
         .endCell(), 64
       );
+      
+      return;
     }
     
     nativeThrow(1000);
