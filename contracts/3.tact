@@ -90,7 +90,7 @@ contract Task3 with Deployable {
 
     let amount_of_token: Int = 0;
 
-    if (sender() == self.jettonAddressB.hash()) {
+    if (sender_hash == self.jettonAddressB.hash()) {
       amount_of_token = (self.aAmount * 1000000000 / self.bAmount) * msg.amount / 1000000000;
 
       if (self.aAmount < amount_of_token) {
@@ -140,7 +140,7 @@ contract Task3 with Deployable {
       return;
     } 
     
-    if (sender() == self.jettonAddressA.hash()) {
+    if (sender_hash == self.jettonAddressA.hash()) {
       amount_of_token = (self.bAmount * 1000000000 / self.aAmount) * msg.amount / 1000000000;
 
       if (self.bAmount < amount_of_token) {
