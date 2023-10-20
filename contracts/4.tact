@@ -96,8 +96,8 @@ contract Task4 with Deployable {
           .storeAddress(sender()) // to: 
           // .storeCoins(0) // value:
           .storeUint(0, 111)
-          .storeBool(false)
-          .storeBool(true)
+          // .storeBool(false)
+          // .storeBool(true)
           .storeRef(
             "NFT is still locked".asComment()
           )

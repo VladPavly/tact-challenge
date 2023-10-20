@@ -94,7 +94,7 @@ contract Task5 with Deployable {
           .storeUint(16, 6)
           .storeAddress(sender()) // to: 
           // .storeCoins(0) // value:
-          .storeUint(1, 107)
+          .storeUint(1, 111)
           .storeRef(
             beginCell()
               .storeUint(0x5fcc3d14, 32)

@@ -86,53 +86,134 @@ contract Task3 with Deployable {
     //   sender() == self.jettonAddressA || sender() == self.jettonAddressB
     // );
 
-    let jetton_address: Address = self.jettonAddressA;
     let amount_of_token: Int = 0;
 
     if (sender() == self.jettonAddressB) {
       amount_of_token = (self.aAmount * 1000000000 / self.bAmount) * msg.amount / 1000000000;
 
       if (self.aAmount < amount_of_token) {
-        amount_of_token = msg.amount;
-        jetton_address = self.jettonAddressB;
-      } else {
-        self.bAmount = self.bAmount + msg.amount;
-        self.aAmount = self.aAmount - amount_of_token;
+        nativeSendMessage(
+          beginCell()
+            .storeUint(16, 6)
+            .storeAddress(sender()) // to: 
+            // .storeCoins(0) // value:
+            .storeUint(1, 111)
+            .storeRef(
+              beginCell()
+                .storeUint(0xf8a7ea5, 32)
+                .storeUint(0, 64)
+                .storeCoins(msg.amount)
+                .storeAddress(msg.from)
+                .storeAddress(myAddress())
+                .storeBool(false)
+                .storeCoins(ton("0.01"))
+              .endCell()
+            )
+          .endCell(), 64
+        );
+
+        return;
       }
-    } else if (sender() == self.jettonAddressA) {
+
+
+      self.bAmount = self.bAmount + msg.amount;
+      self.aAmount = self.aAmount - amount_of_token;
+
+      nativeSendMessage(
+        beginCell()
+          .storeUint(16, 6)
+          .storeAddress(self.jettonAddressA) // to: 
+          // .storeCoins(0) // value:
+          .storeUint(1, 111)
+          .storeRef(
+            beginCell()
+              .storeUint(0xf8a7ea5, 32)
+              .storeUint(0, 64)
+              .storeCoins(amount_of_token)
+              .storeAddress(msg.from)
+              .storeAddress(myAddress())
+              .storeBool(false)
+              .storeCoins(ton("0.01"))
+            .endCell()
+          )
+        .endCell(), 64
+      );
+
+      return;
+    } 
+    
+    if (sender() == self.jettonAddressA) {
       amount_of_token = (self.bAmount * 1000000000 / self.aAmount) * msg.amount / 1000000000;
 
       if (self.bAmount < amount_of_token) {
-        amount_of_token = msg.amount;
-      } else {
-        self.aAmount = self.aAmount + msg.amount;
-        self.bAmount = self.bAmount - amount_of_token;
-
-        jetton_address = self.jettonAddressB;
-      }
-    } else {
-      nativeThrow(1000);
-    }
-
-    nativeSendMessage(
-      beginCell()
-        .storeUint(16, 6)
-        .storeAddress(jetton_address) // to: 
-        // .storeCoins(0) // value:
-        .storeUint(1, 111)
-        .storeRef(
+        nativeSendMessage(
           beginCell()
-            .storeUint(0xf8a7ea5, 32)
-            .storeUint(0, 64)
-            .storeCoins(amount_of_token)
-            .storeAddress(msg.from)
-            .storeAddress(myAddress())
-            .storeBool(false)
-            .storeCoins(ton("0.01"))
-          .endCell()
-        )
-      .endCell(), 64
-    );
+            .storeUint(16, 6)
+            .storeAddress(sender()) // to: 
+            // .storeCoins(0) // value:
+            .storeUint(1, 111)
+            .storeRef(
+              beginCell()
+                .storeUint(0xf8a7ea5, 32)
+                .storeUint(0, 64)
+                .storeCoins(msg.amount)
+                .storeAddress(msg.from)
+                .storeAddress(myAddress())
+                .storeBool(false)
+                .storeCoins(ton("0.01"))
+              .endCell()
+            )
+          .endCell(), 64
+        );
+
+        return;
+      }
+
+      self.aAmount = self.aAmount + msg.amount;
+      self.bAmount = self.bAmount - amount_of_token;
+
+      nativeSendMessage(
+        beginCell()
+          .storeUint(16, 6)
+          .storeAddress(self.jettonAddressB) // to: 
+          // .storeCoins(0) // value:
+          .storeUint(1, 111)
+          .storeRef(
+            beginCell()
+              .storeUint(0xf8a7ea5, 32)
+              .storeUint(0, 64)
+              .storeCoins(amount_of_token)
+              .storeAddress(msg.from)
+              .storeAddress(myAddress())
+              .storeBool(false)
+              .storeCoins(ton("0.01"))
+            .endCell()
+          )
+        .endCell(), 64
+      );
+    }
+    
+    nativeThrow(1000);
+
+    // nativeSendMessage(
+    //   beginCell()
+    //     .storeUint(16, 6)
+    //     .storeAddress(jetton_address) // to: 
+    //     // .storeCoins(0) // value:
+    //     .storeUint(1, 111)
+    //     .storeRef(
+    //       beginCell()
+    //         .storeUint(0xf8a7ea5, 32)
+    //         .storeUint(0, 64)
+    //         .storeCoins(amount_of_token)
+    //         .storeAddress(msg.from)
+    //         .storeAddress(myAddress())
+    //         .storeBool(false)
+    //         .storeCoins(ton("0.01"))
+    //       .endCell()
+    //     )
+    //   .endCell(), 64
+    // );
 
     // send(SendParameters{
     //   to: jetton_address, 
