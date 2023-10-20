@@ -54,25 +54,27 @@ contract Task3 with Deployable {
   owner: Address;
   aAmount: Int as uint128;
   bAmount: Int as uint128;
-  jettonAddressA: Address;
-  jettonAddressB: Address;
+  jettonAddressA: Slice;
+  jettonAddressB: Slice;
 
   init(admin: Address, newJettonAddressA: Address, newJettonAddressB: Address) {
     self.owner = admin;
-    self.jettonAddressA = newJettonAddressA;
-    self.jettonAddressB = newJettonAddressB;
+    self.jettonAddressA = newJettonAddressA.asSlice();
+    self.jettonAddressB = newJettonAddressB.asSlice();
     self.aAmount = 0;
     self.bAmount = 0;
   }
 
   receive(msg: TokenNotification) {
+    let sender_hash: Int = sender().asSlice().hash();
+
     if (msg.from == self.owner) {
-      if (sender() == self.jettonAddressA) {
+      if (sender_hash == self.jettonAddressA.hash()) {
         self.aAmount = self.aAmount + msg.amount;
         return;
       }
       
-      if (sender() == self.jettonAddressB) {
+      if (sender_hash == self.jettonAddressB.hash()) {
         self.bAmount = self.bAmount + msg.amount;
         return;
       }
@@ -88,7 +90,7 @@ contract Task3 with Deployable {
 
     let amount_of_token: Int = 0;
 
-    if (sender() == self.jettonAddressB) {
+    if (sender() == self.jettonAddressB.hash()) {
       amount_of_token = (self.aAmount * 1000000000 / self.bAmount) * msg.amount / 1000000000;
 
       if (self.aAmount < amount_of_token) {
@@ -120,7 +122,7 @@ contract Task3 with Deployable {
       nativeSendMessage(
         beginCell()
           .storeUint(16, 6)
-          .storeAddress(self.jettonAddressA) // to: 
+          .storeSlice(self.jettonAddressA) // to: 
           // .storeCoins(0) // value:
           .storeUint(1, 111)
           .storeRef(
@@ -138,7 +140,7 @@ contract Task3 with Deployable {
       return;
     } 
     
-    if (sender() == self.jettonAddressA) {
+    if (sender() == self.jettonAddressA.hash()) {
       amount_of_token = (self.bAmount * 1000000000 / self.aAmount) * msg.amount / 1000000000;
 
       if (self.bAmount < amount_of_token) {
@@ -231,7 +233,7 @@ contract Task3 with Deployable {
   }
 
   get fun price(jetton: Address): Int { 
-    if (jetton == self.jettonAddressB) {
+    if (jetton.asSlice().hash() == self.jettonAddressB.hash()) {
       return self.aAmount * 1000000000 / self.bAmount;
     }
     
@@ -239,7 +241,7 @@ contract Task3 with Deployable {
   }
   
   get fun balance(jetton: Address): Int { 
-    if (jetton == self.jettonAddressA) {
+    if (jetton.asSlice().hash() == self.jettonAddressA.hash()) {
       return self.aAmount;
     }
     
