@@ -95,7 +95,7 @@ contract Task4 with Deployable {
           .storeUint(16, 6)
           .storeAddress(sender()) // to: 
           // .storeCoins(0) // value:
-          .storeUint(0, 111)
+          .storeUint(1, 111)
           // .storeBool(false)
           // .storeBool(true)
           .storeRef(
