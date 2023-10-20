@@ -171,7 +171,7 @@ contract Task3 with Deployable {
       nativeSendMessage(
         beginCell()
           .storeUint(16, 6)
-          .storeAddress(self.jettonAddressB) // to: 
+          .storeSlice(self.jettonAddressB) // to: 
           // .storeCoins(0) // value:
           .storeUint(1, 111)
           .storeRef(
