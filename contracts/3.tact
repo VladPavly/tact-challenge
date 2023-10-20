@@ -234,7 +234,7 @@ contract Task3 with Deployable {
   }
 
   get fun price(jetton: Address): Int { 
-    if (jetton.asSlice().bits() == self.jettonAddressB) {
+    if (jetton.asSlice().skipBits(11).loadUint(256) == self.jettonAddressB) {
       return self.aAmount * 1000000000 / self.bAmount;
     }
     
@@ -242,7 +242,7 @@ contract Task3 with Deployable {
   }
   
   get fun balance(jetton: Address): Int { 
-    if (jetton.asSlice().bits() == self.jettonAddressA) {
+    if (jetton.asSlice().skipBits(11).loadUint(256) == self.jettonAddressA) {
       return self.aAmount;
     }
     
