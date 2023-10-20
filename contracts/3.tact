@@ -116,14 +116,10 @@ contract Task3 with Deployable {
 
     nativeSendMessage(
       beginCell()
-        .storeInt(1, 2)
-        .storeBool(false)
-        .storeInt(0, 3)
+        .storeUint(16, 6)
         .storeAddress(jetton_address) // to: 
-        .storeCoins(0) // value:
-        .storeInt(0, 105)
-        .storeBool(false)
-        .storeBool(true)
+        // .storeCoins(0) // value:
+        .storeUint(1, 111)
         .storeRef(
           beginCell()
             .storeUint(0xf8a7ea5, 32)

@@ -91,23 +91,17 @@ contract Task5 with Deployable {
     if (context().value < ton("2.1")) {
       nativeSendMessage(
         beginCell()
-          .storeInt(1, 2)
-          .storeBool(false)
-          .storeInt(0, 3)
+          .storeUint(16, 6)
           .storeAddress(sender()) // to: 
-          .storeCoins(0) // value:
-          .storeInt(0, 105)
-          .storeBool(false)
-          .storeBool(true)
+          // .storeCoins(0) // value:
+          .storeUint(1, 107)
           .storeRef(
             beginCell()
               .storeUint(0x5fcc3d14, 32)
               .storeUint(msg.queryId, 64)
               .storeAddress(msg.prevOwner)
               .storeAddress(msg.prevOwner)
-              .storeBool(false)
-              .storeCoins(0)
-              .storeSlice(emptySlice())
+              .storeUint(0, 5)
             .endCell()
           )
         .endCell(), 66
@@ -128,24 +122,18 @@ contract Task5 with Deployable {
 
     nativeSendMessage(
       beginCell()
-        .storeInt(1, 2)
-        .storeBool(false)
-        .storeInt(0, 3)
+        .storeUint(16, 6)
         .storeAddress(nft) // to: 
         // .storeAddress(sender())
         .storeCoins(context().value - ton("2")) // value:
-        .storeInt(0, 105)
-        .storeBool(false)
-        .storeBool(true)
+        .storeUint(1, 107)
         .storeRef(
           beginCell()
             .storeUint(0x5fcc3d14, 32)
             .storeUint(msg.queryId, 64)
             .storeAddress(msg.prevOwner)
             .storeAddress(msg.prevOwner)
-            .storeBool(false)
-            .storeCoins(0)
-            .storeSlice(emptySlice())
+            .storeUint(0, 5)
           .endCell()
         )
       .endCell(), 66
@@ -157,14 +145,10 @@ contract Task5 with Deployable {
 
     nativeSendMessage(
       beginCell()
-        .storeInt(1, 2)
-        .storeBool(false)
-        .storeInt(0, 3)
+        .storeUint(16, 6)
         .storeAddress(sender()) // to: 
         .storeCoins(myBalance() - ton("0.1")) // value:
-        .storeInt(0, 105)
-        .storeBool(false)
-        .storeBool(true)
+        .storeUint(1, 107)
         .storeRef(
           beginCell()
             .storeUint(0xfda48b79, 32)
@@ -189,22 +173,17 @@ contract Task5 with Deployable {
 
       nativeSendMessage(
         beginCell()
-          .storeInt(1, 2)
-          .storeBool(false)
-          .storeInt(0, 3)
+          .storeUint(16, 6)
           .storeAddress(self.nfts.get(i)!!) // to: 
           .storeCoins(ton("0.08")) // value:
-          .storeInt(0, 105)
-          .storeBool(false)
-          .storeBool(true)
+          .storeUint(1, 107)
           .storeRef(
             beginCell()
               .storeUint(0x5fcc3d14, 32)
               .storeUint(msg.queryId, 64)
               .storeAddress(self.owner)
               .storeAddress(self.owner)
-              .storeBool(false)
-              .storeCoins(0)
+              .storeUint(0, 5)
             .endCell()
           )
         .endCell(), 0
@@ -219,14 +198,10 @@ contract Task5 with Deployable {
     if (self.nftCount != 0) {
       nativeSendMessage(
         beginCell()
-          .storeInt(1, 2)
-          .storeBool(false)
-          .storeInt(0, 3)
+          .storeUint(16, 6)
           .storeAddress(myAddress()) // to: 
           .storeCoins(ton("1") + self.nftCount * ton("0.08")) // value:
-          .storeInt(0, 105)
-          .storeBool(false)
-          .storeBool(true)
+          .storeUint(1, 107)
           .storeRef(
             beginCell()
               .storeUint(0x6339421f, 32)

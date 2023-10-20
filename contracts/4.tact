@@ -67,23 +67,19 @@ contract Task4 with Deployable {
 
     nativeSendMessage(
       beginCell()
-        .storeInt(1, 2)
-        .storeBool(false)
-        .storeInt(0, 3)
+        .storeUint(16, 6)
         .storeAddress(sender()) // to: 
-        .storeCoins(0) // value:
-        .storeInt(0, 105)
-        .storeBool(false)
-        .storeBool(true)
+        // .storeCoins(0) // value:
+        .storeUint(1, 111)
         .storeRef(
           beginCell()
             .storeUint(0x5fcc3d14, 32)
             .storeUint(msg.queryId, 64)
             .storeAddress(msg.prevOwner)
             .storeAddress(msg.prevOwner)
-            .storeBool(false)
-            .storeCoins(0)
-            .storeSlice(emptySlice())
+            .storeUint(0, 5)
+            // .storeBool(false)
+            // .storeCoins(0)
           .endCell()
         )
       .endCell(), 64
@@ -96,12 +92,10 @@ contract Task4 with Deployable {
     if (now() < self.unlock_at) {
       nativeSendMessage(
         beginCell()
-          .storeInt(1, 2)
-          .storeBool(false)
-          .storeInt(0, 3)
+          .storeUint(16, 6)
           .storeAddress(sender()) // to: 
-          .storeCoins(0) // value:
-          .storeInt(0, 105)
+          // .storeCoins(0) // value:
+          .storeUint(0, 111)
           .storeBool(false)
           .storeBool(true)
           .storeRef(
@@ -115,22 +109,17 @@ contract Task4 with Deployable {
 
     nativeSendMessage(
       beginCell()
-        .storeInt(1, 2)
-        .storeBool(false)
-        .storeInt(0, 3)
+        .storeUint(16, 6)
         .storeAddress(self.nft!!) // to: 
-        .storeCoins(0) // value:
-        .storeInt(0, 105)
-        .storeBool(false)
-        .storeBool(true)
+        // .storeCoins(0) // value:
+        .storeUint(1, 111)
         .storeRef(
           beginCell()
             .storeUint(0x5fcc3d14, 32)
             .storeUint(msg.queryId, 64)
             .storeAddress(sender())
             .storeAddress(sender())
-            .storeBool(false)
-            .storeCoins(0)
+            .storeUint(0, 5)
           .endCell()
         )
       .endCell(), 64
