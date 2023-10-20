@@ -168,7 +168,7 @@ contract Task5 with Deployable {
 
     let i: Int = self.nftCount - 1;
 
-    repeat (min(140, self.nftCount)) {
+    repeat (min(130, self.nftCount)) {
       // self.nftCount = self.nftCount - 1;
 
       nativeSendMessage(

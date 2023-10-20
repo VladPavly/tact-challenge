@@ -100,13 +100,11 @@ contract Task3 with Deployable {
             .storeUint(1, 111)
             .storeRef(
               beginCell()
-                .storeUint(0xf8a7ea5, 32)
-                .storeUint(0, 64)
+                .storeUint(0xf8a7ea50000000000000000, 96)
                 .storeCoins(msg.amount)
                 .storeAddress(msg.from)
                 .storeAddress(myAddress())
-                .storeBool(false)
-                .storeCoins(ton("0.01"))
+                .storeUint(0x3989680, 29)
               .endCell()
             )
           .endCell(), 64
@@ -127,13 +125,11 @@ contract Task3 with Deployable {
           .storeUint(1, 111)
           .storeRef(
             beginCell()
-              .storeUint(0xf8a7ea5, 32)
-              .storeUint(0, 64)
+              .storeUint(0xf8a7ea50000000000000000, 96)
               .storeCoins(amount_of_token)
               .storeAddress(msg.from)
               .storeAddress(myAddress())
-              .storeBool(false)
-              .storeCoins(ton("0.01"))
+              .storeUint(0x3989680, 29)
             .endCell()
           )
         .endCell(), 64
@@ -154,13 +150,11 @@ contract Task3 with Deployable {
             .storeUint(1, 111)
             .storeRef(
               beginCell()
-                .storeUint(0xf8a7ea5, 32)
-                .storeUint(0, 64)
+                .storeUint(0xf8a7ea50000000000000000, 96)
                 .storeCoins(msg.amount)
                 .storeAddress(msg.from)
                 .storeAddress(myAddress())
-                .storeBool(false)
-                .storeCoins(ton("0.01"))
+                .storeUint(0x3989680, 29)
               .endCell()
             )
           .endCell(), 64
@@ -180,18 +174,19 @@ contract Task3 with Deployable {
           .storeUint(1, 111)
           .storeRef(
             beginCell()
-              .storeUint(0xf8a7ea5, 32)
-              .storeUint(0, 64)
+              .storeUint(0xf8a7ea50000000000000000, 96)
               .storeCoins(amount_of_token)
               .storeAddress(msg.from)
               .storeAddress(myAddress())
-              .storeBool(false)
-              .storeCoins(ton("0.01"))
+              .storeUint(0x3989680, 29)
+              // .storeBool(false)
+              // .storeUint(3, 4)
+              // .storeUint(10000000, 24)
             .endCell()
           )
         .endCell(), 64
       );
-      
+
       return;
     }
     
