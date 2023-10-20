@@ -22,11 +22,14 @@ contract Task2 with Deployable {
   admin: Int as uint256;
 
   init(admin: Address) {
-    self.admin = admin.asSlice().skipBits(11).loadUint(256);
+    let admin_slice: Slice = admin.asSlice().skipBits(11);
+    self.admin = admin_slice.loadUint(256);
   }
   
   receive(msg: Refund) {
-    nativeThrowUnless(1000, sender().asSlice().skipBits(11).loadUint(256) == self.admin);
+    let sender_slice: Slice = sender().asSlice().skipBits(11);
+
+    nativeThrowUnless(1000, sender_slice.loadUint(256) == self.admin);
 
     nativeSendMessage(
       beginCell()
