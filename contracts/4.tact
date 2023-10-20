@@ -142,19 +142,19 @@ contract Task4 with Deployable {
     return max(0, self.unlock_at - now());
   }
 
-  get fun nft(): Address? {
+  get fun nft(): Cell? {
     if (self.nft == null) {
       return null;
     }
 
-    return newAddress(1024, self.nft!!);
+    return beginCell().storeUint(1024, 11).storeUint(self.nft!!, 256).endCell();
   }
 
-  get fun owner(): Address? {
+  get fun owner(): Cell? {
     if (self.owner == null) {
       return null;
     }
 
-    return newAddress(1024, self.owner!!);
+    return beginCell().storeUint(1024, 11).storeUint(self.owner!!, 256).endCell();
   }
 }
